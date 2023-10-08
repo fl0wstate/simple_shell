@@ -34,8 +34,6 @@ char *_strtok(char *s, const char *delim)
 				break;
 			}
 		}
-		else
-			flag = 0;
 	}
 	if (i && tok[i + 1] && flag)
 		tok = tok + i + 1 + _strspn(tok + i + 1, delim);

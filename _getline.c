@@ -12,8 +12,9 @@ ssize_t _getline(char **line, size_t *len, FILE *stream)
 {
 	size_t init = !*line || !*len ? BUFFER : *len, i = 0, old;
 	ssize_t bytes;
-	static int count = 0;
+	static int count;
 
+	count = 0;
 	*len = !*line || !*len ? init : *len;
 
 	if (!*line || *len == 0)

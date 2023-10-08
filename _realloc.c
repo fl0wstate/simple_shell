@@ -19,7 +19,7 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 	if (new_size == old_size)
 		return (ptr);
 	if (!ptr)
-		return (malloc(new_size * sizeof(ptr)));
+		return (malloc(new_size));
 
 	return (adjust_book(ptr, old_size, new_size));
 }

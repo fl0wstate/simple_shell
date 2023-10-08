@@ -3,7 +3,7 @@
 /**
  * _strtok - tokenize string base on delimiter
  * @s: string pointer
- * @delim: delimiter
+ * @delim: delimiter, might differ on each call
  *
  * Return: token on each iteration, or `NULL`
  */
@@ -35,9 +35,9 @@ char *_strtok(char *s, const char *delim)
 			}
 		}
 	}
-	if (i && tok[i + 1] && flag)
+	if (flag)
 		tok = tok + i + 1 + _strspn(tok + i + 1, delim);
-	else if (i)
+	else
 	{
 		s = tok;
 		tok = 0;

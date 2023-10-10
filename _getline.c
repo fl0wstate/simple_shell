@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * _getline - read line from stream
@@ -14,17 +15,13 @@ ssize_t _getline(char **line, size_t *len, FILE *stream)
 	ssize_t bytes;
 	static int count;
 
-	count = 0;
-	*len = !*line || !*len ? init : *len;
+	count = 0, *len = !*line || !*len ? init : *len;
 
 	if (!*line || *len == 0)
 	{
 		*line = malloc(init);
 		if (!*line)
-		{
-			dprintf(STDERR_FILENO, "malloc: failed\n");
-			return (-1);
-		}
+			getline_error("malloc");
 	}
 	while ((bytes = read(stream->_fileno, &((*line)[i++]), 1)) > REOF)
 	{
@@ -43,21 +40,27 @@ ssize_t _getline(char **line, size_t *len, FILE *stream)
 			*len = init;
 			*line = _realloc(*line, old,  init);
 			if (!*line)
-			{
-				dprintf(STDERR_FILENO, "realloc: failed\n");
-				return (-1);
-			}
+				getline_error("realloc");
 		}
 		if ((*line)[i - 1] == '\n')
 			break;
 	}
 	if (bytes < REOF)
-	{
-		dprintf(STDERR_FILENO, "failed to read stream\n");
-		return (-1);
-	}
+		getline_error("read");
 
 	(*line)[i] = 0;
 
 	return (i);
+}
+
+/**
+ * getline_error - print error and exit
+ * @str: string of error
+ *
+ * Return: -1 as error number
+ */
+int getline_error(char *str)
+{
+	perror(str);
+	return (-1);
 }

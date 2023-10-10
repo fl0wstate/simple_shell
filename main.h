@@ -10,4 +10,6 @@ char *_strtok(char *str, const char *delim);
 char *_strchr(const char *s, char c);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 void *adjust_book(char *ptr, unsigned int old_size, unsigned int new_size);
+int getline_error(char *str);
+
 #endif /* HEADER */

@@ -10,7 +10,6 @@
  */
 char *_which(char *cmd, char **env)
 {
-	int i = 0;
 	char *delim = "PATH=:", *tok = 0, *path = 0, *dir = 0;
 	struct stat st;
 
@@ -18,26 +17,19 @@ char *_which(char *cmd, char **env)
 		return (0);
 	if (_strpbrk(cmd, "~/"))
 		return (_strdup(cmd));
-	for (i = 0; env[i]; i++)
+	tok = _strtok(_getenv("PATH"), delim);
+	while (tok)
 	{
-		if (!_strncmp(env[i], "PATH", 4))
+		dir = str_concat(tok, "/");
+		path = str_concat(dir, cmd);
+		if (!stat(path, &st))
 		{
-			tok = _strtok(env[i], delim);
-			while (tok)
-			{
-				dir = str_concat(tok, "/");
-				path = str_concat(dir, cmd);
-				if (!stat(path, &st))
-				{
-					free(dir);
-					return (path);
-				}
-				free(dir);
-				free(path);
-				tok = _strtok(0, delim);
-			}
-			break;
+			free(dir);
+			return (path);
 		}
+		free(dir);
+		free(path);
+		tok = _strtok(0, delim);
 	}
 
 	return (0);

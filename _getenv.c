@@ -10,7 +10,6 @@
 char *_getenv(const char *name)
 {
 	int i = 0, name_len = 0;
-	char *val = 0;
 
 	if (!name)
 		return (0);
@@ -20,14 +19,9 @@ char *_getenv(const char *name)
 	for (i = 0; environ[i]; i++)
 	{
 		if (!_strncmp(environ[i], (char *)name, name_len))
-		{
-			val = (environ[i]);
-			_strtok(val, "=");
-			val = _strtok(0, "=");
-			break;
-		}
+			return (environ[i] + name_len + 1);
 	}
 
-	return (val);
+	return (0);
 }
 

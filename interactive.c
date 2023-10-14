@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * interactive - hanlder interactive mode
@@ -11,9 +12,9 @@ void interactive(m_args *mode_args)
 
 	if (!*mode_args->path)
 	{
-		execve(**mode_args->tokens, *mode_args->tokens, *mode_args->env);
-		_printf("%s: %u: %s: not found\n",
-		_getenv("_"), *mode_args->cmd_count, **mode_args->tokens);
+		/*execve(**mode_args->tokens, *mode_args->tokens, *mode_args->env);*/
+		printf("%s: %u: %s: not found\n",
+				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
 		free_buf(0, mode_args->path, 0);
 		free_buf(mode_args->tokens, 0, 1);
 	}

@@ -21,7 +21,8 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 
 	while (-1)
 	{
-		write(1, "$ ", 2);
+		if (isatty(STDIN_FILENO))
+			printf("($) ");
 		bytes = getline(&line, &n, stdin);
 		if (bytes == -1)
 		{
@@ -51,5 +52,4 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 	}
 	return (0);
 }
-
 

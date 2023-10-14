@@ -12,7 +12,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 {
 	ssize_t bytes;
 	size_t n = 0;
-	ui cmd_count = 0;
+	ui cmd_count = 0, mode_stat;
 	char **tokens = 0;
 	char *line = 0, *path = 0;
 	list_t *list_path = path_list();
@@ -20,7 +20,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 
 	while (-1)
 	{
-		if (isatty(STDIN_FILENO))
+		if ((mode_stat = isatty(STDIN_FILENO)))
 			_printf("($) ");
 		bytes = getline(&line, &n, stdin);
 		if (bytes == -1)
@@ -40,7 +40,8 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 		mode_args.line = &line;
 		mode_args.cmd_count = &cmd_count;
 		mode_args.list_path = &list_path;
-		mode(STDIN_FILENO)(&mode_args);
+
+		mode(mode_stat)(&mode_args);
 	}
 	return (0);
 }

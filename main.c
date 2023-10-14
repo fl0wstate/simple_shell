@@ -1,29 +1,19 @@
-#include "shell2.h"
-#include <endian.h>
-#include <signal.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
+#include "main.h"
 
-void _handler(int num)
-{
-	sig = num;
-}
 /**
  * prompt - prompt the user once he enters the shell
  * Return: void
  */
 void prompt(void)
 {
-	_printf("$ ");
+	printf("$ ");
 }
 /**
  * start_shell - reads the user inputs in shell
  * Return: char pointer to the string of chars
  * entered by the user
  */
+#if 0
 char *start_shell(void)
 {
 	char *buf = NULL;
@@ -31,7 +21,7 @@ char *start_shell(void)
 	ssize_t reads = 0;
 
 	prompt();
-	while ((reads = getline(&buf, &get, stdin)) == -1)
+	while ((reads = _getline(&buf, &get, stdin->_fileno)) == -1)
 	{
 		free(buf);
 		exit(EXIT_FAILURE);
@@ -39,6 +29,7 @@ char *start_shell(void)
 	buf[reads - 1] = '\0';
 	return (buf);
 }
+#endif
 
 /**
  * tokenize_command - simple function that tokenizes a string of chars
@@ -63,13 +54,13 @@ char **tokenize_command(char *cmd)
 	malloc_check_prev_double(tokens, cmd);
 	/* check me out ^^ */
 
-	token = strtok(cmd, delim);
+	token = _strtok(cmd, delim);
 	count = 0;
 	while (token)
 	{
 		tokens[count] = token;
 		count++;
-		token = strtok(NULL, delim);
+		token = _strtok(NULL, delim);
 	}
 	tokens[count] = NULL;
 	count = 0;
@@ -97,7 +88,7 @@ int execute_command(char **tokens, char *cmd, char **argv, int count, char *s)
 	{
 		if (execve(tokens[i], tokens, NULL) == -1)
 		{
-			_printf("%s : %u: %s: not a command\n",
+			printf("%s : %u: %s: not found\n",
 					argv[0], count, s);
 			free(cmd);
 			free(tokens);
@@ -124,11 +115,14 @@ int execute_command(char **tokens, char *cmd, char **argv, int count, char *s)
  *
  * Return: 1 failure, 0 success
  */
+#if 0
 int main(int ac __attribute__((unused)),
 		char **av, char **envp)
 {
+
 	int check = 1;
 	static int cn;
+	(void)envp;
 
 	cn = 1;
 	while (check)
@@ -142,12 +136,6 @@ int main(int ac __attribute__((unused)),
 			tokens = tokenize_command(cmd);
 			check = execute_command(tokens, cmd, av, cn, cmd);
 
-			signal(SIGINT, _handler);
-			if (SIGINT == (const int)sig)
-			{
-				free(cmd);
-				exit(EXIT_FAILURE);
-			}
 		}
 		else
 		{
@@ -155,7 +143,7 @@ int main(int ac __attribute__((unused)),
 
 			while (getline(&cmd, &size, stdin) != -1)
 			{
-				cmd[strlen(cmd) - 1] = '\0';
+				cmd[_strlen(cmd) - 1] = '\0';
 				tokens = tokenize_command(cmd);
 				check = execute_command(tokens, cmd, av, cn, cmd);
 			}
@@ -165,4 +153,7 @@ int main(int ac __attribute__((unused)),
 		}
 		cn++;
 	}
+
+	return (0);
 }
+#endif

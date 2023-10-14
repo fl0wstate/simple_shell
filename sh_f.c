@@ -1,12 +1,4 @@
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <sys/cdefs.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
-int count_words(char *str);
+#include "main.h"
 
 /**
  * main - simple shell
@@ -16,101 +8,48 @@ int count_words(char *str);
  *
  * Return: 0 as exit status
  */
-int main(int ac, char **av, char **env)
+int main(__attribute__((unused))int ac, char **av, char **env)
 {
 	ssize_t bytes;
 	size_t n = 0;
+	ui cmd_count = 0;
 	char *line = 0;
-	pid_t fk_id;
-	int status, i = 0;
-	char **args = 0;
-	char *tok = 0, *delim = " ";
-	(void)ac;
-	(void)av;
+	char **tokens = 0;
+	char *path = 0;
+	list_t *list_path = path_list();
+	m_args mode_args;
 
 	while (-1)
 	{
-		printf("$ ");
+		write(1, "$ ", 2);
 		bytes = getline(&line, &n, stdin);
-		if (bytes == EOF)
-			free(line), exit(1);
-
-		line[bytes - 1] = 0;
-		args = malloc(sizeof(*args) * (count_words(line) + 1));
-		if (!args)
-			perror("malloc"), free(line), exit(1);
-		for (i = 0, tok = strtok(line, delim); tok; i++, tok = strtok(0, delim))
+		if (bytes == -1)
 		{
-			args[i] = malloc(strlen(tok) + 1);
-			if (!args[i])
-			{
-				while (i--)
-					free(args[i]);
-				free(args);
-				free(line);
-				perror("malloc");
-				exit(1);
-			}
-			strcpy(args[i], tok);
-		}
-		args[i] = 0;
-		fk_id = fork();
-		if (fk_id < 0)
-			perror("fork"), free(line), exit(1);
-
-		if (!fk_id)
-		{
-			/* child */
-			execve(args[0], args, env);
-			/* if it fails; then below lines will be reachable */
-			perror("execve");
-			while (i--)
-				free(args[i]);
-			free(args);
-			free(line);
+			free_buf(0, &line, 0);
+			free_list(list_path);
 			exit(1);
 		}
-		else
+		line[bytes - 1] = 0;
+		cmd_count++;
+		tokens = tokenize_line(line);
+		if (!_strcmp(tokens[0], "exit"))
 		{
-			/* parent */
-			wait(&status);
-			free(line);
-			while (i--)
-				free(args[i]);
-			free(args);
-			line = 0;
+			free_list(list_path);
+			free_buf(0, &line, 0);
+			free_buf(&tokens, 0, 1);
+			exit(0);
 		}
+		path = _which(tokens[0], list_path);
+		mode_args.tokens = &tokens;
+		mode_args.env = &env;
+		mode_args.av = av;
+		mode_args.path = &path;
+		mode_args.line = &line;
+		mode_args.cmd_count = &cmd_count;
+		mode_args.list_path = &list_path;
+		mode(STDIN_FILENO)(&mode_args);
 	}
-
 	return (0);
 }
 
-/**
- * count_words - count number of words in a string
- * @str: string pointer
- *
- * Return: number of words,
- * 0 on failure
- */
-int count_words(char *str)
-{
-	int len = 0, count = 0;
 
-	if (!str)
-		return (0);
-	for (; str[len]; len++)
-	{
-		if (str[len] == 32)
-			continue;
-		if (str[len + 1] == 32)
-			count++;
-	}
-	if (!len)
-		return (0);
-	if (str[len - 1] != 32)
-		count++;
-	if (count == 0)
-		return (0);
-
-	return (count);
-}

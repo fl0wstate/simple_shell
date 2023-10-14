@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
  * _getline - read line from stream
@@ -43,13 +42,17 @@ ssize_t _getline(char **line, size_t *len, FILE *stream)
 				return (getline_error("realloc"));
 		}
 		if ((*line)[i - 1] == '\n')
-		{
-			(*line)[i] = 0;
-			return (i);
-		}
+			break;
+	}
+	if (bytes == EOF)
+	{
+		write(1, "it's EOF\n", 10);
+		return (-1);
 	}
 
-	return (-1);
+	(*line)[i] = 0;
+
+	return (i);
 }
 /**
  * getline_error - print error and exit

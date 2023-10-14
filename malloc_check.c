@@ -1,6 +1,4 @@
-#include "shell.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "main.h"
 
 /**
  * malloc_check - checks for memory allocation failure

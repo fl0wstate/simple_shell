@@ -18,7 +18,7 @@ char *_strtok(char *s, const char *delim)
 		return (0);
 	for (i = 0; tok[i]; i++)
 	{
-		if (_strchr(delim, tok[i]))
+		if (_strchr((char *)delim, tok[i]))
 		{
 			flag = 1;
 			if (!i)

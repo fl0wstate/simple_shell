@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-static int sig;
 
 /* custom builtin functions struct */
 
@@ -58,7 +57,6 @@ typedef long int li;
 #define BUFF_SIZE 1024
 
 /* String function prototypes */
-size_t _strlen(const char *);
 int count_words(char *str);
 int _printf(const char *format, ...);
 

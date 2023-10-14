@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
  * _getline - read line from stream
@@ -17,6 +16,7 @@ ssize_t _getline(char **line, size_t *len, FILE *stream)
 
 	count = 0, *len = !*line || !*len ? init : *len;
 
+	fflush(stdout);
 	if (!*line || *len == 0)
 	{
 		*line = malloc(init);
@@ -38,7 +38,7 @@ ssize_t _getline(char **line, size_t *len, FILE *stream)
 				init += bytes + 1;
 			}
 			*len = init;
-			*line = _realloc(*line, old,  init);
+			line = _realloc(*line, old,  init);
 			if (!*line)
 				return (getline_error("realloc"));
 		}

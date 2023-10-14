@@ -21,7 +21,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 	while (-1)
 	{
 		if (isatty(STDIN_FILENO))
-			printf("($) ");
+			_printf("($) ");
 		bytes = getline(&line, &n, stdin);
 		if (bytes == -1)
 		{

@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdio.h>
 
 /**
  * interactive - hanlder interactive mode
@@ -12,17 +11,16 @@ void interactive(m_args *mode_args)
 
 	if (!*mode_args->path)
 	{
-#if 0
 		if (!_strcmp(**mode_args->tokens, "exit"))
 		{
+			/* TODO:Here handle ur custom error function */
 			free_list(*mode_args->list_path);
 			free_buf(0, mode_args->line, 0);
 			free_buf(mode_args->tokens, 0, 1);
 			exit(0);
 		}
-#endif
 		/*execve(**mode_args->tokens, *mode_args->tokens, *mode_args->env);*/
-		printf("%s: %u: %s: not found\n",
+		_printf("%s: %u: %s: not found\n",
 				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
 		free_buf(0, mode_args->path, 0);
 		free_buf(mode_args->tokens, 0, 1);
@@ -56,3 +54,4 @@ void interactive(m_args *mode_args)
 		}
 	}
 }
+

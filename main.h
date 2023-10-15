@@ -20,6 +20,7 @@ typedef unsigned int ui;
 typedef long int li;
 typedef struct list_s list_t;
 typedef struct mode_arguments m_args;
+typedef struct builtin_commands builtin_t;
 typedef struct format_specifiers specifiers_x;
 
 /* ----------GLOBALS--------------- */
@@ -79,6 +80,23 @@ struct mode_arguments
 	list_t **list_path;
 };
 
+/**
+ * struct x_builtins - handler for all the builtin commands
+ * @cmd: a constant commmand char pointer to the actual
+ * command entered by the user
+ * @builtin function: a function pointer to all the builtin
+ * commands.
+ * 
+ * Description: simple builtin struct to handle builtin commands
+ */
+struct builtin_commands
+{
+	const char *cmd;
+	/* same as void (*builtin)(char ***tokens, char **line); 
+	 * where tokens is an arrays of arrays */
+	void (*builtin)(m_args *mode_args);
+};
+
 /* -------------------UTILS----------------- */
 void free_envcpy(char ***cpy);
 void (*mode(int fd))(m_args *mode_arguments);
@@ -103,8 +121,14 @@ void malloc_check(char *pointer);
 void malloc_check_prev(char *pointer, char *prev_alloc);
 void malloc_check_prev_double(char **pointer, char *prev_alloc);
 void malloc_check_all(char *pointer, char *prev_alloc, char **pointers, int i);
-void *adjust_book(char *ptr, unsigned int old_size, unsigned int new_size);
+void *adjust_book(char *ptr, ui old_size, ui new_size);
 ui digit_counter(int num);
+
+/* addons from MK */
+void _builtins_commands(m_args *mode_args);
+void help_builtin(m_args *mode_args);
+void exit_builtin(m_args *mode_args);
+void change_directory(m_args *mode_args);
 
 /* -------------------MOCKS---------------------- */
 unsigned int _strspn(char *s, const char *accept);
@@ -121,5 +145,6 @@ char *_which(char *cmd, list_t *list_path);
 char *_strcpy(char *dest, char *src);
 ssize_t _getline(char **line, size_t *len, FILE *);
 int _printf(const char *format, ...);
+int _atoi(char *s);
 
 #endif /* HEADER */

@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * main - simple shell
@@ -40,6 +41,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 		mode_args.line = &line;
 		mode_args.cmd_count = &cmd_count;
 		mode_args.list_path = &list_path;
+
 		mode(STDIN_FILENO)(&mode_args);
 	}
 	return (0);

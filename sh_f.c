@@ -12,7 +12,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 {
 	ssize_t bytes;
 	size_t n = 0;
-	ui cmd_count = 0, mode_stat, i = 0;
+	ui cmd_count = 0, mode_stat;
 	char **tokens = 0;
 	char *line = 0, *path = 0;
 	list_t *list_path = path_list();

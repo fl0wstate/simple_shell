@@ -11,8 +11,12 @@
  */
 int _setenv(const char *name, const char *value, int overwrite)
 {
-	int i = 0, idx = 0, len = 0;
-	env_config env = {0, 0, name};
+	int idx = 0;
+	env_config env;
+
+	env.idx = 0;
+	env.len = 0;
+	env.name = name;
 
 	if (!name || !_strlen((char *)name) || _strchr((char *)name, '='))
 		return (-1);

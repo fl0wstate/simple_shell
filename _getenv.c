@@ -17,10 +17,11 @@ char *_getenv(const char *name)
 	name_len = _strlen((char *)name);
 
 	for (i = 0; environ[i]; i++)
-	{
-		if (!_strncmp(environ[i], (char *)name, name_len))
+		if (!_strncmp(environ[i], (char *)name, name_len)
+				&& environ[i][name_len] == '=')
+		{
 			return (environ[i] + name_len + 1);
-	}
+		}
 
 	return (0);
 }

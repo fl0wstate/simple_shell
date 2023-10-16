@@ -98,6 +98,7 @@ struct builtin_commands
 };
 
 /* -------------------UTILS----------------- */
+void builtin_handler(m_args *mode_args);
 void free_envcpy(char ***cpy);
 void (*mode(int fd))(m_args *mode_arguments);
 void interactive(m_args *mode_arguments);

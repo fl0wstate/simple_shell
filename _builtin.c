@@ -9,6 +9,7 @@
  */
 void change_directory(m_args *mode_args)
 {
+	/* TODO: handle `-` which responsible to read from `OLDPWD` */
 	if ((*mode_args->tokens)[1] == NULL)
 	{
 		chdir((_getenv("HOME")));

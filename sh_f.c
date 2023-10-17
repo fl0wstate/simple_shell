@@ -31,7 +31,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 		mode_stat = isatty(STDIN_FILENO);
 		if (mode_stat)
 			_printf("($) ");
-		bytes = getline(&line, &n, stdin);
+		bytes = _getline(&line, &n, stdin);
 		if (bytes == -1)
 			EOF_handler(&mode_args, list_path);
 		line[bytes - 1] = 0;

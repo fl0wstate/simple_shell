@@ -11,6 +11,7 @@ int builtin_handler(m_args *mode_args)
 {
 	int i = 0;
 
+	/*TODO: handle `type` built in */
 	builtin_t builtins[] = {
 		{"exit", exit_builtin},
 		{"cd", change_directory},
@@ -31,9 +32,4 @@ int builtin_handler(m_args *mode_args)
 		i++;
 	}
 	return (1);
-#if 0
-	if (!builtins[i].cmd)
-		_printf("%s: %u: %s: not found\n",
-				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
-#endif
 }

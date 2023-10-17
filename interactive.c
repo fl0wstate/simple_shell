@@ -6,7 +6,7 @@
  */
 void interactive(m_args *mode_args)
 {
-	int status;
+	int status, i;
 	pid_t fk_id;
 
 	if (!builtin_handler(mode_args))
@@ -31,7 +31,10 @@ void interactive(m_args *mode_args)
 
 		if (!fk_id)/* child */
 		{
-			/*TODO: which command doesn't work */
+			printf("path = %s\n", *mode_args->path);
+			for (i = 0; (*mode_args->tokens)[i]; i++)
+				printf("tokens[%d] = %s\n", i, (*mode_args->tokens)[i]);
+			/*TODO: execve doesn't handle which command!!!! */
 			execve(*mode_args->path, *mode_args->tokens, *mode_args->env);
 			perror("execve");
 			free_safe(mode_args);

@@ -55,6 +55,7 @@ void setenv_builtin(m_args *mode_args)
 	int status;
 
 	mode_args->free = 1;
+	/*TODO: handle error when there's no arguments to setenv */
 	status = _setenv((*mode_args->tokens)[1], (*mode_args->tokens)[2], 1);
 	if (status < 0)
 	{

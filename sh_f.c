@@ -26,7 +26,6 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 	mode_args.cmd_count = &cmd_count;
 	mode_args.list_path = &list_path;
 	mode_args.free = 0;
-
 	while (-1)
 	{
 		mode_stat = isatty(STDIN_FILENO);
@@ -34,20 +33,17 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 			_printf("($) ");
 		bytes = getline(&line, &n, stdin);
 		if (bytes == -1)
-		{
-			free_safe(&mode_args);
-			free_list(list_path);
-			if (mode_args.free)
-				free_envcpy(&environ);
-			exit(1);
-		}
+			EOF_handler(&mode_args, list_path);
 		line[bytes - 1] = 0;
 		cmd_count++;
 		tokens = tokenize_line(line);
+		if (!**mode_args.tokens)
+		{
+			free_safe(&mode_args);
+			continue;
+		}
 		path = _which(tokens[0], list_path);
-
-		if (*tokens)
-			mode(mode_stat)(&mode_args);
+		mode(mode_stat)(&mode_args);
 	}
 	return (0);
 }

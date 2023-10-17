@@ -113,6 +113,7 @@ struct builtin_commands
 };
 
 /* -------------------UTILS----------------- */
+void EOF_handler(m_args *mode_args, list_t *list_path);
 void free_safe(m_args *mode_args);
 void env_builtin(m_args *mode_args);
 void unsetenv_builtin(m_args *mode_args);

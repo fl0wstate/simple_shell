@@ -1,7 +1,4 @@
 #include "main.h"
-#include <linux/limits.h>
-#include <stdio.h>
-#include <unistd.h>
 /**
  * change_directory - move to another directory
  *
@@ -11,25 +8,18 @@
  */
 void change_directory(m_args *mode_args)
 {
-	char *_cwd_buf = malloc(PATH_MAX);
-
+	/* TODO: handle `-` which responsible to read from `OLDPWD` */
 	if ((*mode_args->tokens)[1] == NULL)
 	{
 		/* collect the current working directory */
-		getcwd(_cwd_buf, PATH_MAX);
-		setenv("OLDPWD", _cwd_buf, 1);
 		chdir((_getenv("HOME")));
 		/* update the PWD */
-		getcwd(_cwd_buf, PATH_MAX);
-		setenv("PWD", _cwd_buf, 1);
 	}
 	else if (!_strcmp((*mode_args->tokens)[1], "-"))
 	{
 		if (_getenv("OLDPWD"))
 		{
 			chdir(_getenv("OLDPWD"));
-			getcwd(_cwd_buf, PATH_MAX);
-			setenv("PWD", _cwd_buf, 1);
 		}
 		else
 			printf("%s: %s: OLDPWD not set\n", *mode_args->av, (*mode_args->tokens)[0]);
@@ -40,7 +30,7 @@ void change_directory(m_args *mode_args)
 					*mode_args->av, *mode_args->cmd_count,
 					**mode_args->tokens, (*mode_args->tokens)[1]);
 	}
-	free(_cwd_buf);
+	free_safe(mode_args);
 }
 /**
  * exit_builtin - exits the shell
@@ -56,26 +46,58 @@ void exit_builtin(m_args *mode_args)
 
 	/* exit 98 */
 	status = _atoi((*mode_args->tokens)[1]);
-	free_buf(mode_args->tokens, NULL, 1);
-	free_buf(NULL, mode_args->line, 0);
-	free_buf(NULL, mode_args->path, 0);
+	free_safe(mode_args);
 	free_list(*mode_args->list_path);
+	if (mode_args->free)
+		free_envcpy(&environ);
 	exit(status < 0 ? 0 : status);
 }
 
 /**
- * _get_cwd - custom function to get the current dir
- * @mode_args: store the current working dir inside the path list
- * Return: void
+ * setenv_builtin - setenv handler
+ *
+ * @mode_args: pointer to `mode_arguments` struct
+ *
  */
-void _get_cwd(m_args *mode_args)
+void setenv_builtin(m_args *mode_args)
 {
-	(void)mode_args;
-	char *buf = NULL;
+	int status;
 
-	buf = malloc(PATH_MAX);
-	getcwd(buf, PATH_MAX);
-
-	_printf("%s\n", buf);
-	free_buf(NULL, &buf, 0);
+	mode_args->free = 1;
+	status = _setenv((*mode_args->tokens)[1], (*mode_args->tokens)[2], 1);
+	if (status < 0)
+	{
+		/*TODO: print error msg to stderr */
+		printf("Oops.. sth went wrong in setenv\n");
+	}
+	free_safe(mode_args);
 }
+
+/**
+ * unsetenv_builtin - unsetenv handler
+ *
+ * @mode_args: pointer to `mode_arguments` struct
+ *
+ */
+void unsetenv_builtin(m_args *mode_args)
+{
+	setenv_builtin(mode_args);
+	free_safe(mode_args);
+}
+
+/**
+ * env_builtin - env handler
+ *
+ * @mode_args: pointer to `mode_arguments` struct
+ *
+ */
+void env_builtin(m_args *mode_args)
+{
+	int i = 0;
+	(void)mode_args;
+
+	for (i = 0; environ[i]; i++)
+		_printf("%s\n", environ[i]);
+	free_safe(mode_args);
+}
+

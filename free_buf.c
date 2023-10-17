@@ -10,7 +10,7 @@ void free_buf(char ***buff, char **buf, int flag)
 {
 	if (flag)
 	{
-		if (*buff)
+		if (buff && *buff)
 		{
 			free(*buff);
 			*buff = 0;
@@ -18,7 +18,7 @@ void free_buf(char ***buff, char **buf, int flag)
 	}
 	else
 	{
-		if (*buf)
+		if (buf && *buf)
 		{
 			free(*buf);
 			*buf = 0;

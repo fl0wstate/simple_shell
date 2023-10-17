@@ -23,11 +23,26 @@ typedef struct list_s list_t;
 typedef struct mode_arguments m_args;
 typedef struct builtin_commands builtin_t;
 typedef struct format_specifiers specifiers_x;
+typedef struct environ_configuration env_config;
 
 /* ----------GLOBALS--------------- */
 extern char **environ;
 
 /* ----------STRUCTS-------------- */
+/**
+ * struct environ_configuration - store info of environ
+ * @idx: index of environ to update
+ * @len: length of environment variables
+ * @name: name to update its value
+ * @free: flag when to free the envrion
+ */
+struct environ_configuration
+{
+	int idx;
+	int len;
+	int *free;
+	const char *name;
+};
 /**
  * struct format_specifiers - simple _printf
  * data structure
@@ -61,14 +76,17 @@ struct list_s
 };
 
 /**
- * struct mode_hanlder - mode_hanlder (non/interactive)
+ * struct mode_arguments - mode_hanlder (non/interactive)
  * @tokens: address of array of strings
  * @env: address of environment variables
  * @av: argument vector
  * @path: address to the executable file
+ * @line: address of line read from stdin
  * @cmd_count: integer represents how many time the user interact
+ * @list_path: address  of struct `list_t`
+ * @free: flag when to free the envrion
  *
- * Description: singly linked list node structure
+ * Description: mode arguments structures
  */
 struct mode_arguments
 {
@@ -77,30 +95,32 @@ struct mode_arguments
 	char **av;
 	char **path;
 	char **line;
-	char ***command_list;
-	bool set_or_not_set;
 	ui *cmd_count;
+	ui free;
 	list_t **list_path;
 };
 
 /**
- * struct x_builtins - handler for all the builtin commands
+ * struct builtin_commands - handler for all the builtin commands
  * @cmd: a constant commmand char pointer to the actual
  * command entered by the user
  * @builtin function: a function pointer to all the builtin
  * commands.
- * 
+ *
  * Description: simple builtin struct to handle builtin commands
  */
 struct builtin_commands
 {
 	const char *cmd;
-	/* same as void (*builtin)(char ***tokens, char **line); 
-	 * where tokens is an arrays of arrays */
 	void (*builtin)(m_args *mode_args);
 };
 
 /* -------------------UTILS----------------- */
+void free_safe(m_args *mode_args);
+void env_builtin(m_args *mode_args);
+void unsetenv_builtin(m_args *mode_args);
+void setenv_builtin(m_args *mode_args);
+int builtin_handler(m_args *mode_args);
 void free_envcpy(char ***cpy);
 void (*mode(int fd))(m_args *mode_arguments);
 void interactive(m_args *mode_arguments);
@@ -126,18 +146,16 @@ void malloc_check_prev_double(char **pointer, char *prev_alloc);
 void malloc_check_all(char *pointer, char *prev_alloc, char **pointers, int i);
 void *adjust_book(char *ptr, ui old_size, ui new_size);
 ui digit_counter(int num);
-
+int adjust(const char *name, const char *value, int overwrite, env_config);
+int add_new(const char *name, const char *value, env_config);
+int set_envconfig(env_config *);
 /* addons from MK */
-void _builtins_commands(m_args *mode_args);
-void help_builtin(m_args *mode_args);
 void exit_builtin(m_args *mode_args);
 void change_directory(m_args *mode_args);
-void _get_cwd(m_args *mode_args);
-/* void command_separator_handler(m_args *mode_args); */
-int count_commands(char *str);
-void command_separator_handler(char **line);
 
 /* -------------------MOCKS---------------------- */
+int _setenv(const char *name, const char *value, int overwrite);
+int _unsetenv(env_config *);
 unsigned int _strspn(char *s, const char *accept);
 char *_strtok(char *str, const char *delim);
 char *_strchr(char *s, char c);

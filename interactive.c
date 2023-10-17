@@ -9,11 +9,14 @@ void interactive(m_args *mode_args)
 	int status;
 	pid_t fk_id;
 
-	if (!*mode_args->path)/* built-ins */
+	if (!builtin_handler(mode_args))
+		return;
+	if (!*mode_args->path)
 	{
-		builtin_handler(mode_args);
-		free_buf(0, mode_args->path, 0);
-		free_buf(mode_args->tokens, 0, 1);
+		/*TODO: print should be on stderr */
+		_printf("%s: %u: %s: not found\n",
+				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
+		free_safe(mode_args);
 	}
 	else
 	{
@@ -21,26 +24,23 @@ void interactive(m_args *mode_args)
 		if (fk_id < 0)
 		{
 			perror("fork");
-			free_buf(0, mode_args->line, 0);
+			free_safe(mode_args);
+			/*TODO: revisit exit status */
 			exit(1);
 		}
 
 		if (!fk_id)/* child */
 		{
-			/*environ = *mode_args->env;*/
+			/*TODO: which command doesn't work */
 			execve(*mode_args->path, *mode_args->tokens, *mode_args->env);
 			perror("execve");
-			free_buf(mode_args->tokens, 0, 1);
-			free_buf(0, mode_args->path, 0);
-			free_buf(0, mode_args->line, 0);
-			exit(1);
+			free_safe(mode_args);
+			exit(2);
 		}
 		else/* parent */
 		{
 			wait(&status);
-			free_buf(0, mode_args->path, 0);
-			free_buf(mode_args->tokens, 0, 1);
-			free_buf(0, mode_args->line, 0);
+			free_safe(mode_args);
 		}
 	}
 }

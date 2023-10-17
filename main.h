@@ -38,6 +38,7 @@ struct environ_configuration
 {
 	int idx;
 	int len;
+	int *free;
 	const char *name;
 };
 /**
@@ -73,14 +74,16 @@ struct list_s
 };
 
 /**
- * struct mode_hanlder - mode_hanlder (non/interactive)
+ * struct mode_arguments - mode_hanlder (non/interactive)
  * @tokens: address of array of strings
  * @env: address of environment variables
  * @av: argument vector
  * @path: address to the executable file
+ * @line: address of line read from stdin
  * @cmd_count: integer represents how many time the user interact
+ * @list_path: address  of struct `list_t`
  *
- * Description: singly linked list node structure
+ * Description: mode arguments structures
  */
 struct mode_arguments
 {
@@ -90,28 +93,31 @@ struct mode_arguments
 	char **path;
 	char **line;
 	ui *cmd_count;
+	ui free;
 	list_t **list_path;
 };
 
 /**
- * struct x_builtins - handler for all the builtin commands
+ * struct builtin_commands - handler for all the builtin commands
  * @cmd: a constant commmand char pointer to the actual
  * command entered by the user
  * @builtin function: a function pointer to all the builtin
  * commands.
- * 
+ *
  * Description: simple builtin struct to handle builtin commands
  */
 struct builtin_commands
 {
 	const char *cmd;
-	/* same as void (*builtin)(char ***tokens, char **line); 
-	 * where tokens is an arrays of arrays */
 	void (*builtin)(m_args *mode_args);
 };
 
 /* -------------------UTILS----------------- */
-void builtin_handler(m_args *mode_args);
+void free_safe(m_args *mode_args);
+void env_builtin(m_args *mode_args);
+void unsetenv_builtin(m_args *mode_args);
+void setenv_builtin(m_args *mode_args);
+int builtin_handler(m_args *mode_args);
 void free_envcpy(char ***cpy);
 void (*mode(int fd))(m_args *mode_arguments);
 void interactive(m_args *mode_arguments);
@@ -137,10 +143,9 @@ void malloc_check_prev_double(char **pointer, char *prev_alloc);
 void malloc_check_all(char *pointer, char *prev_alloc, char **pointers, int i);
 void *adjust_book(char *ptr, ui old_size, ui new_size);
 ui digit_counter(int num);
-int adjust(const char *name, const char *value, int overwrite, int idx);
-int add_new (const char *name, const char *value, int len);
+int adjust(const char *name, const char *value, int overwrite, env_config);
+int add_new (const char *name, const char *value, env_config);
 int set_envconfig(env_config *);
-
 /* addons from MK */
 void _builtins_commands(m_args *mode_args);
 void help_builtin(m_args *mode_args);

@@ -14,7 +14,8 @@ int _strcmp(char *s1, char *s2)
 {
 	int ret = 0;
 
-	for (; *s1 && *s2; s1++, s2++)
+	/*TODO: fix the return value, when they're not equal */
+	for (; *s1 || *s2; s1++, s2++)
 	{
 		if (*s1 != *s2)
 		{

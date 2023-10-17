@@ -7,13 +7,16 @@
  *
  * Return: void
  */
-void builtin_handler(m_args *mode_args)
+int builtin_handler(m_args *mode_args)
 {
 	int i = 0;
 
 	builtin_t builtins[] = {
 		{"exit", exit_builtin},
 		{"cd", change_directory},
+		{"env", env_builtin},
+		{"setenv", setenv_builtin},
+		{"unsetenv", unsetenv_builtin},
 		{NULL, NULL}
 	};
 
@@ -23,11 +26,14 @@ void builtin_handler(m_args *mode_args)
 					(char *)(*mode_args->tokens)[0]))
 		{
 			builtins[i].builtin(mode_args);
-			break;
+			return (0);
 		}
 		i++;
 	}
+	return (1);
+#if 0
 	if (!builtins[i].cmd)
 		_printf("%s: %u: %s: not found\n",
 				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
+#endif
 }

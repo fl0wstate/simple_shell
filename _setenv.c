@@ -20,12 +20,13 @@ int _setenv(const char *name, const char *value, int overwrite)
 
 	if (!name || !_strlen((char *)name) || _strchr((char *)name, '='))
 		return (-1);
-	if (!value)
-		return (_unsetenv(name));
-
 	ignore = set_envconfig(&env);
-
 	count++;
+
+	/*TODO: handle freeing of previously allocated enviorn */
+	if (!value)
+		return (_unsetenv(&env));
+
 	if (!ignore)
 		return (adjust(name, value, overwrite, env));
 	return (add_new(name, value, env));

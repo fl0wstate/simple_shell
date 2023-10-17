@@ -2,35 +2,28 @@
 
 /**
  * _unsetenv - deletes the variable name from the environment.
- * @name: environ name
+ * @envconf: struct of `env_config` see main.h
  *
  * Return: 0 on success
  * -1 on failure
  */
-int _unsetenv(const char *name)
+int _unsetenv(env_config *envconf)
 {
-	int i = 0, j = 0, ignore;
-	static int count;
+	int i = 0, j = 0;
 	char **cpy;
-	env_config env;
 
-	env.name = name;
-	env.free = &count;
 
-	ignore = set_envconfig(&env);
 
-	if (ignore)/*TODO: handle errno here */
+	if (envconf->idx < 0)/*TODO: handle errno here */
 		return (-1);
 
-	cpy = malloc(sizeof(environ) * env.len);
+	cpy = malloc(sizeof(environ) * envconf->len);
 	for (j = 0; environ[i]; i++)
-		if (i != env.idx)
+		if (i != envconf->idx)
 			cpy[j++] = _strdup(environ[i]);
 	cpy[j] = 0;
 
-	count++;
-
-	if (*env.free >= 2)
+	if (*envconf->free >= 2)
 		free_envcpy(&environ);
 
 	environ = cpy;

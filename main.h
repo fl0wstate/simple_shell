@@ -154,7 +154,7 @@ void change_directory(m_args *mode_args);
 
 /* -------------------MOCKS---------------------- */
 int _setenv(const char *name, const char *value, int overwrite);
-int _unsetenv(const char *name);
+int _unsetenv(env_config *);
 unsigned int _strspn(char *s, const char *accept);
 char *_strtok(char *str, const char *delim);
 char *_strchr(char *s, char c);

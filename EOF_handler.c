@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * EOF_hanlder - hanlde EOF
+ * EOF_handler - hanlde EOF
  * @mode_args: struct (check main.h for details)
  * @list_path: struct (check main.h for details)
  */

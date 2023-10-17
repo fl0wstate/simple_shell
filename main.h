@@ -57,7 +57,7 @@ struct environ_configuration
 struct format_specifiers
 {
 	char form_t;
-	int (*call)(va_list *);
+	int (*call)(va_list *, int fd);
 };
 
 /**
@@ -138,8 +138,9 @@ list_t *path_list(void);
 char *start_shell(void);
 char **tokenize_command(char *cmd);
 int execute_command(char **tokens, char *cmd, char **argv, int count, char *s);
-int _ui_arg(va_list *ap);
-int _string_arg(va_list *ap);
+int _ui_arg(va_list *ap, int fd);
+int _string_arg(va_list *ap, int fd);
+int _char_arg(va_list *ap, int fd);
 int count_words(char *str);
 void malloc_check(char *pointer);
 void malloc_check_prev(char *pointer, char *prev_alloc);
@@ -170,7 +171,7 @@ char *_getenv(const char *name);
 char *_which(char *cmd, list_t *list_path);
 char *_strcpy(char *dest, char *src);
 ssize_t _getline(char **line, size_t *len, FILE *);
-int _printf(const char *format, ...);
+int _dprintf(int fd, const char *format, ...);
 int _atoi(char *s);
 
 #endif /* HEADER */

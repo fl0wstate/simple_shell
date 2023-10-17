@@ -1,4 +1,5 @@
 #include "main.h"
+#include <unistd.h>
 
 /**
  * interactive - hanlder interactive mode
@@ -14,7 +15,7 @@ void interactive(m_args *mode_args)
 	if (!*mode_args->path)
 	{
 		/*TODO: print should be on stderr */
-		_printf("%s: %u: %s: not found\n",
+		_dprintf(STDERR_FILENO, "%s: %u: %s: not found\n",
 				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
 		free_safe(mode_args);
 	}

@@ -32,11 +32,12 @@ void change_directory(m_args *mode_args)
 			_setenv("PWD", _current_wd, 1);
 		}
 		else
-			printf("%s: %s: OLDPWD not set\n", *mode_args->av, (*mode_args->tokens)[0]);
+			_dprintf(STDERR_FILENO, "%s: %s: OLDPWD not set\n",
+					*mode_args->av, (*mode_args->tokens)[0]);
 	}
 	else if (chdir(((*mode_args->tokens)[1])) != 0)
 	{
-		_printf("%s: %u: %s: can't cd to %s\n",
+		_dprintf(STDERR_FILENO, "%s: %u: %s: can't cd to %s\n",
 					*mode_args->av, *mode_args->cmd_count,
 					**mode_args->tokens, (*mode_args->tokens)[1]);
 	}
@@ -80,7 +81,7 @@ void setenv_builtin(m_args *mode_args)
 	if (status < 0)
 	{
 		/*TODO: print error msg to stderr */
-		printf("Oops.. sth went wrong in setenv\n");
+		_dprintf(STDERR_FILENO, "Oops.. sth went wrong in setenv\n");
 	}
 	free_safe(mode_args);
 }
@@ -109,7 +110,7 @@ void env_builtin(m_args *mode_args)
 	(void)mode_args;
 
 	for (i = 0; environ[i]; i++)
-		_printf("%s\n", environ[i]);
+		_dprintf(STDOUT_FILENO, "%s\n", environ[i]);
 	free_safe(mode_args);
 }
 

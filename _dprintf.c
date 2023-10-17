@@ -1,15 +1,16 @@
 #include "main.h"
 
 /**
- * _printf - prints only unsigned int and
- *  string datatype pass since that the most
- *  commonly use of this function on the shell
- *  project
+ * _dprintf - prints only unsigned int and string datatype pass
+ * since that the most
+ * commonly use of this function on this shell
+ * project
+ * @fd: a file descriptor the user inputs
  * @format: string pointer
  * Return: len of the string
  */
 
-int _printf(const char *format, ...)
+int _dprintf(int fd, const char *format, ...)
 {
 	va_list ap;
 	int index_arr_no, i = 0;
@@ -32,16 +33,16 @@ int _printf(const char *format, ...)
 			{
 				if (format[i] == formats[index_arr_no].form_t)
 				{
-					count += formats[index_arr_no].call(&ap);
+					count += formats[index_arr_no].call(&ap, fd);
 					break;
 				}
 				index_arr_no++;
 			}
 			if (formats[index_arr_no].form_t == 0)
-				count += write(STDOUT_FILENO, &format[i], 1);
+				count += write(fd, &format[i], 1);
 		}
 		else
-			count += write(STDOUT_FILENO, &format[i], 1);
+			count += write(fd, &format[i], 1);
 		i++;
 	}
 	va_end(ap);
@@ -51,9 +52,10 @@ int _printf(const char *format, ...)
 /**
  * _string_arg - prints a string format type
  * @ap: list of indefinite arguments number
+ * @fd: file descriptor to write to
  * Return: 0 (success)
  */
-int _string_arg(va_list *ap)
+int _string_arg(va_list *ap, int fd)
 {
 	char *s;
 
@@ -62,15 +64,16 @@ int _string_arg(va_list *ap)
 	{
 		s = "(null)";
 	}
-	return ((unsigned int)(write(STDOUT_FILENO, s, _strlen(s))));
+	return ((unsigned int)(write(fd, s, _strlen(s))));
 }
 /**
  * _ui_arg - returns an unsigned int value
  *
  * @ap: list of indefinite arguments
+ * @fd: file descriptor to write to
  * Return: value to be printed
  */
-int _ui_arg(va_list *ap)
+int _ui_arg(va_list *ap, int fd)
 {
 	int retrive = 0;
 	int mask = 0, mask_cpy = 0;
@@ -92,7 +95,7 @@ int _ui_arg(va_list *ap)
 	/* check me out here **^^ */
 	while (--mask_cpy >= 0)
 	{
-		write(STDOUT_FILENO, &buf[mask_cpy], 1);
+		write(fd, &buf[mask_cpy], 1);
 	}
 	free(buf);
 	return (mask);
@@ -114,4 +117,18 @@ ui digit_counter(int num)
 		count++;
 	}
 	return (count);
+}
+
+/**
+ * _char_arg - prints a char format type
+ * @ap: list of indefinite arguments number
+ * @fd: file descriptor to write to
+ * Return: 0 (success)
+ */
+int _char_arg(va_list *ap, int fd)
+{
+	char x;
+
+	x = va_arg(*ap, int);
+	return ((unsigned int)(write(fd, &x, 1)));
 }

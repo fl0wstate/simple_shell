@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include <unistd.h>
 /**
  * main - simple shell
  * @ac: arguments count
@@ -30,7 +30,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 	{
 		mode_stat = isatty(STDIN_FILENO);
 		if (mode_stat)
-			_printf("($) ");
+			_dprintf(STDOUT_FILENO, "($) ");
 		bytes = _getline(&line, &n, stdin);
 		if (bytes == -1)
 			EOF_handler(&mode_args, list_path);
@@ -47,4 +47,3 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 	}
 	return (0);
 }
-

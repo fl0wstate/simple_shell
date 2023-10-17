@@ -1,3 +1,9 @@
 a.out
 a
 *vgcore*
+TEST_SUITE
+runchecker.bash
+checker.bash
+ls
+*.bak*
+_get_cwd.c.bak

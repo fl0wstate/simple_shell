@@ -1,0 +1,18 @@
+#include "main.h"
+#include <linux/limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+/**
+ * _get_cwd - custom function to get the current dir
+ * @buf: store the current working dir
+ * Return: void
+ */
+char *_get_cwd(char *buf)
+{
+	buf = malloc(PATH_MAX);
+	getcwd(buf, PATH_MAX);
+
+	return (buf);
+}

@@ -1,5 +1,6 @@
 #include "main.h"
-
+#include <linux/limits.h>
+#include <unistd.h>
 /**
  * change_directory - move to another directory
  *
@@ -9,17 +10,40 @@
  */
 void change_directory(m_args *mode_args)
 {
+	char *_current_wd = malloc(PATH_MAX);
+
 	/* TODO: handle `-` which responsible to read from `OLDPWD` */
 	if ((*mode_args->tokens)[1] == NULL)
 	{
+		mode_args->free = 1;
+		/* collect the current working directory */
+		getcwd(_current_wd, PATH_MAX);
+		_setenv("OLDPWD", _current_wd, 1);
 		chdir((_getenv("HOME")));
+		/* update the PWD */
+		getcwd(_current_wd, PATH_MAX);
+		_setenv("PWD", _current_wd, 1);
+	}
+	else if (!_strcmp((*mode_args->tokens)[1], "-"))
+	{
+		if (_getenv("OLDPWD"))
+		{
+			mode_args->free = 1;
+			chdir(_getenv("OLDPWD"));
+			getcwd(_current_wd, PATH_MAX);
+			_setenv("PWD", _current_wd, 1);
+		}
+		else
+			_dprintf(STDERR_FILENO, "%s: %s: OLDPWD not set\n",
+					*mode_args->av, (*mode_args->tokens)[0]);
 	}
 	else if (chdir(((*mode_args->tokens)[1])) != 0)
 	{
-		_printf("%s: %u: %s: can't cd to %s\n",
+		_dprintf(STDERR_FILENO, "%s: %u: %s: can't cd to %s\n",
 					*mode_args->av, *mode_args->cmd_count,
 					**mode_args->tokens, (*mode_args->tokens)[1]);
 	}
+	free(_current_wd);
 	free_safe(mode_args);
 }
 /**
@@ -43,7 +67,6 @@ void exit_builtin(m_args *mode_args)
 	exit(status < 0 ? 0 : status);
 }
 
-
 /**
  * setenv_builtin - setenv handler
  *
@@ -60,7 +83,7 @@ void setenv_builtin(m_args *mode_args)
 	if (status < 0)
 	{
 		/*TODO: print error msg to stderr */
-		printf("Oops.. sth went wrong in setenv\n");
+		_dprintf(STDERR_FILENO, "Oops.. sth went wrong in setenv\n");
 	}
 	free_safe(mode_args);
 }
@@ -89,7 +112,7 @@ void env_builtin(m_args *mode_args)
 	(void)mode_args;
 
 	for (i = 0; environ[i]; i++)
-		_printf("%s\n", environ[i]);
+		_dprintf(STDOUT_FILENO, "%s\n", environ[i]);
 	free_safe(mode_args);
 }
 

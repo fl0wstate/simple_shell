@@ -6,7 +6,7 @@
  */
 void interactive(m_args *mode_args)
 {
-	int status, i;
+	int status;
 	pid_t fk_id;
 
 	if (!builtin_handler(mode_args))
@@ -14,7 +14,7 @@ void interactive(m_args *mode_args)
 	if (!*mode_args->path)
 	{
 		/*TODO: print should be on stderr */
-		_printf("%s: %u: %s: not found\n",
+		_dprintf(STDERR_FILENO, "%s: %u: %s: not found\n",
 				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
 		free_safe(mode_args);
 	}
@@ -28,12 +28,8 @@ void interactive(m_args *mode_args)
 			/*TODO: revisit exit status */
 			exit(1);
 		}
-
 		if (!fk_id)/* child */
 		{
-			printf("path = %s\n", *mode_args->path);
-			for (i = 0; (*mode_args->tokens)[i]; i++)
-				printf("tokens[%d] = %s\n", i, (*mode_args->tokens)[i]);
 			/*TODO: execve doesn't handle which command!!!! */
 			execve(*mode_args->path, *mode_args->tokens, *mode_args->env);
 			perror("execve");
@@ -47,4 +43,3 @@ void interactive(m_args *mode_args)
 		}
 	}
 }
-

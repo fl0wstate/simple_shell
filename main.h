@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/signal.h>
+#include <stdbool.h>
 
 /* -------------MACROS------------ */
 #define BUFFER 120
@@ -33,6 +34,7 @@ extern char **environ;
  * @idx: index of environ to update
  * @len: length of environment variables
  * @name: name to update its value
+ * @free: flag when to free the envrion
  */
 struct environ_configuration
 {
@@ -55,7 +57,7 @@ struct environ_configuration
 struct format_specifiers
 {
 	char form_t;
-	int (*call)(va_list *);
+	int (*call)(va_list *, int fd);
 };
 
 /**
@@ -82,6 +84,7 @@ struct list_s
  * @line: address of line read from stdin
  * @cmd_count: integer represents how many time the user interact
  * @list_path: address  of struct `list_t`
+ * @free: flag when to free the envrion
  *
  * Description: mode arguments structures
  */
@@ -135,8 +138,9 @@ list_t *path_list(void);
 char *start_shell(void);
 char **tokenize_command(char *cmd);
 int execute_command(char **tokens, char *cmd, char **argv, int count, char *s);
-int _ui_arg(va_list *ap);
-int _string_arg(va_list *ap);
+int _ui_arg(va_list *ap, int fd);
+int _string_arg(va_list *ap, int fd);
+int _char_arg(va_list *ap, int fd);
 int count_words(char *str);
 void malloc_check(char *pointer);
 void malloc_check_prev(char *pointer, char *prev_alloc);
@@ -145,11 +149,9 @@ void malloc_check_all(char *pointer, char *prev_alloc, char **pointers, int i);
 void *adjust_book(char *ptr, ui old_size, ui new_size);
 ui digit_counter(int num);
 int adjust(const char *name, const char *value, int overwrite, env_config);
-int add_new (const char *name, const char *value, env_config);
+int add_new(const char *name, const char *value, env_config);
 int set_envconfig(env_config *);
 /* addons from MK */
-void _builtins_commands(m_args *mode_args);
-void help_builtin(m_args *mode_args);
 void exit_builtin(m_args *mode_args);
 void change_directory(m_args *mode_args);
 
@@ -169,7 +171,7 @@ char *_getenv(const char *name);
 char *_which(char *cmd, list_t *list_path);
 char *_strcpy(char *dest, char *src);
 ssize_t _getline(char **line, size_t *len, FILE *);
-int _printf(const char *format, ...);
+int _dprintf(int fd, const char *format, ...);
 int _atoi(char *s);
 
 #endif /* HEADER */

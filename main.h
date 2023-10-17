@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/signal.h>
+#include <stdbool.h>
 
 /* -------------MACROS------------ */
 #define BUFFER 120
@@ -76,6 +77,8 @@ struct mode_arguments
 	char **av;
 	char **path;
 	char **line;
+	char ***command_list;
+	bool set_or_not_set;
 	ui *cmd_count;
 	list_t **list_path;
 };
@@ -129,6 +132,10 @@ void _builtins_commands(m_args *mode_args);
 void help_builtin(m_args *mode_args);
 void exit_builtin(m_args *mode_args);
 void change_directory(m_args *mode_args);
+void _get_cwd(m_args *mode_args);
+/* void command_separator_handler(m_args *mode_args); */
+int count_commands(char *str);
+void command_separator_handler(char **line);
 
 /* -------------------MOCKS---------------------- */
 unsigned int _strspn(char *s, const char *accept);

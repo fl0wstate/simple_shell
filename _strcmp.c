@@ -12,16 +12,21 @@
  */
 int _strcmp(char *s1, char *s2)
 {
-	int ret = 0;
+	unsigned int i = 0;
 
-	for (; *s1 && *s2; s1++, s2++)
+	while (*s1 != '\0' && *s2 != '\0')
 	{
-		if (*s1 != *s2)
-		{
-			ret = *s1 - *s2;
-			break;
-		}
+		if (s1[i] < s2[i])
+			return (-1);
+		else if (*s1 > *s2)
+			return (1);
+		s1++;
+		s2++;
 	}
-
-	return (ret);
+	if (*s1 == '\0' && *s2 == '\0')
+		return (0);
+	else if (*s1 == '\0')
+		return (-1);
+	else
+		return (1);
 }

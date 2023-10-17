@@ -12,6 +12,7 @@ void builtin_handler(m_args *mode_args)
 
 	builtin_t builtins[] = {
 		{"exit", exit_builtin},
+		{"pwd", _get_cwd},
 		{"cd", change_directory},
 		{NULL, NULL}
 	};
@@ -54,7 +55,6 @@ void interactive(m_args *mode_args)
 			free_buf(0, mode_args->line, 0);
 			exit(1);
 		}
-
 		if (!fk_id)/* child */
 		{
 			/*environ = *mode_args->env;*/
@@ -74,4 +74,3 @@ void interactive(m_args *mode_args)
 		}
 	}
 }
-

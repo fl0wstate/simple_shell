@@ -2,7 +2,7 @@
 
 /**
  * non_interactive - hanlde non-interactive mode
- * @mode_args: struct of mode_arguments.
+* @mode_args: struct of mode_arguments.
  */
 void non_interactive(m_args *mode_args)
 {

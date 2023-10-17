@@ -1,4 +1,6 @@
 #include "main.h"
+#include <linux/limits.h>
+#include <unistd.h>
 /**
  * change_directory - move to another directory
  *
@@ -8,18 +10,26 @@
  */
 void change_directory(m_args *mode_args)
 {
+	char *_current_wd = malloc(PATH_MAX);
+
 	/* TODO: handle `-` which responsible to read from `OLDPWD` */
 	if ((*mode_args->tokens)[1] == NULL)
 	{
 		/* collect the current working directory */
+		getcwd(_current_wd, PATH_MAX);
+		_setenv("OLDPWD", _current_wd, 1);
 		chdir((_getenv("HOME")));
 		/* update the PWD */
+		getcwd(_current_wd, PATH_MAX);
+		_setenv("PWD", _current_wd, 1);
 	}
 	else if (!_strcmp((*mode_args->tokens)[1], "-"))
 	{
 		if (_getenv("OLDPWD"))
 		{
 			chdir(_getenv("OLDPWD"));
+			getcwd(_current_wd, PATH_MAX);
+			_setenv("PWD", _current_wd, 1);
 		}
 		else
 			printf("%s: %s: OLDPWD not set\n", *mode_args->av, (*mode_args->tokens)[0]);
@@ -30,6 +40,7 @@ void change_directory(m_args *mode_args)
 					*mode_args->av, *mode_args->cmd_count,
 					**mode_args->tokens, (*mode_args->tokens)[1]);
 	}
+	free(_current_wd);
 	free_safe(mode_args);
 }
 /**

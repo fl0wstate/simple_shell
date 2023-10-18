@@ -75,6 +75,7 @@ void exit_builtin(m_args *mode_args)
 			status = _atoi((*mode_args->tokens)[1]);
 		/*free_safe(mode_args);*/
 	}
+	free_safe(mode_args);
 	if (!is_err)
 	{
 		if (mode_args->free)
@@ -83,7 +84,7 @@ void exit_builtin(m_args *mode_args)
 		free_list(*mode_args->list_path);
 		exit(status ? status : mode_args->_errno);
 	}
-	free_safe(mode_args);
+	/*free_safe(mode_args);*/
 }
 
 /**
@@ -157,9 +158,20 @@ void env_builtin(m_args *mode_args)
 	int i = 0;
 	(void)mode_args;
 
-	for (i = 0; environ[i]; i++)
-		_dprintf(STDOUT_FILENO, "%s\n", environ[i]);
-	/*TODO: handle args to env */
+	if ((*mode_args->tokens)[1])
+	{
+		/* error */
+		mode_args->_errno = 127;
+		_dprintf(STDERR_FILENO, "%s: %s: No such file or directory\n",
+				(*mode_args->tokens)[0], (*mode_args->tokens)[1]);
+
+	}
+	else
+	{
+		for (i = 0; environ[i]; i++)
+			_dprintf(STDOUT_FILENO, "%s\n", environ[i]);
+		/*TODO: handle args to env */
+	}
 	free_safe(mode_args);
 }
 

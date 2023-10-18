@@ -33,10 +33,11 @@ char *_which(char *cmd, list_t *list_path)
 		dir = str_concat(head->str, "/");
 		path = str_concat(dir, cmd);
 		/*if (!stat(path, &st))*/
-		if (!access(path, F_OK | X_OK))
+		if (!stat(path, &st))
 		{
 			free(dir);
-			return (path);
+			if (st.st_mode & S_IXUSR)
+				return (path);
 		}
 		free(dir);
 		free(path);

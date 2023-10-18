@@ -14,6 +14,7 @@
 #define BUFFER 120
 #define REOF 0
 #define BUFF_SIZE 1024
+/* Debugging */
 
 /* ------------ALIASES------------ */
 typedef unsigned int long uli;

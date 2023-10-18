@@ -33,7 +33,6 @@ int count_words(char *str)
  * count_tokens - count number of words in a string
  * @str: string pointer
  * @delim: delimeter char value
- * @_strint: function pointer
  *
  * Return: number of words,
  * 0 on failure

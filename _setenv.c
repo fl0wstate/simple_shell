@@ -23,7 +23,6 @@ int _setenv(const char *name, const char *value, int overwrite)
 	ignore = set_envconfig(&env);
 	count++;
 
-	/*TODO: handle freeing of previously allocated enviorn */
 	if (!value)
 		return (_unsetenv(&env));
 

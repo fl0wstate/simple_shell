@@ -92,13 +92,21 @@ void setenv_builtin(m_args *mode_args)
 {
 	int status;
 
-	mode_args->free = 1;
-	/*TODO: handle error when there's no arguments to setenv */
-	status = _setenv((*mode_args->tokens)[1], (*mode_args->tokens)[2], 1);
-	if (status < 0)
+	if (!(*mode_args->tokens)[1] || !(*mode_args->tokens)[2])
 	{
-		/*TODO: print error msg to stderr */
-		_dprintf(STDERR_FILENO, "Oops.. sth went wrong in setenv\n");
+		/*TODO: handle error when there's no arguments to setenv */
+		_dprintf(STDERR_FILENO, "%s: %u: %s: insufficient arguments\n",
+				*mode_args->av, *mode_args->cmd_count, (*mode_args->tokens)[0]);
+	}
+	else
+	{
+		mode_args->free = 1;
+		status = _setenv((*mode_args->tokens)[1], (*mode_args->tokens)[2], 1);
+		if (status < 0)
+		{
+			/*TODO: print error msg to stderr */
+			_dprintf(STDERR_FILENO, "Oops.. sth went wrong in setenv\n");
+		}
 	}
 	free_safe(mode_args);
 }
@@ -111,7 +119,25 @@ void setenv_builtin(m_args *mode_args)
  */
 void unsetenv_builtin(m_args *mode_args)
 {
-	setenv_builtin(mode_args);
+	int status;
+
+	if (!(*mode_args->tokens)[1])
+	{
+		/*TODO: handle error when there's no arguments to setenv */
+		_dprintf(STDERR_FILENO, "%s: %u: %s: insufficient arguments\n",
+				*mode_args->av, *mode_args->cmd_count, (*mode_args->tokens)[0]);
+	}
+	else
+	{
+		mode_args->free = 1;
+		status = _setenv((*mode_args->tokens)[1], 0, 1);
+		if (status < 0)
+		{
+			/*TODO: print error msg to stderr */
+			_dprintf(STDERR_FILENO, "Oops.. sth went wrong in unsetenv\n");
+		}
+		/*setenv_builtin(mode_args);*/
+	}
 	free_safe(mode_args);
 }
 

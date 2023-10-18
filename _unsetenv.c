@@ -12,12 +12,13 @@ int _unsetenv(env_config *envconf)
 	int i = 0, j = 0;
 	char **cpy;
 
-
-
-	if (envconf->idx < 0)/*TODO: handle errno here */
-		return (-1);
+	if (envconf->idx < 0)
+		return (0);
 
 	cpy = malloc(sizeof(environ) * envconf->len);
+	if (!cpy)
+		return (-1);
+
 	for (j = 0; environ[i]; i++)
 		if (i != envconf->idx)
 			cpy[j++] = _strdup(environ[i]);

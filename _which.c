@@ -21,7 +21,7 @@ char *_which(char *cmd, list_t *list_path)
 		path = _strdup(cmd);
 		if (!stat(path, &st))
 			return (path);
-		free(path);
+		free_buf(0, &path, 0);
 		return (0);
 	}
 
@@ -32,22 +32,23 @@ char *_which(char *cmd, list_t *list_path)
 		dir = str_concat(head->str, "/");
 		path = str_concat(dir, cmd);
 		if (!stat(path, &st))
-		/*if (!access(path, X_OK))*/
 		{
-			free(dir);
-			return (path);
+			free_buf(0, &dir, 0);
+			if (st.st_mode & S_IXUSR)
+				return (path);
 		}
-		free(dir);
-		free(path);
+		free_buf(0, &dir, 0);
+		free_buf(0, &path, 0);
 		head = head->next;
 	}
 	return (0);
 }
 #if 0
-char *_which(char *cmd)
+char *_which(char *cmd, list_t *list_path)
 {
 	char *delim = "PATH=:", *tok = 0, *path = 0, *dir = 0;
 	struct stat st;
+	(void)list_path;
 
 	if (!cmd)
 		return (0);
@@ -58,7 +59,6 @@ char *_which(char *cmd)
 		return (0);
 	}
 	tok = _strtok(_getenv("PATH"), delim);
-	printf("tok = %s\n", tok);
 	while (tok)
 	{
 		dir = str_concat(tok, "/");

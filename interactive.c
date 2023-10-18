@@ -31,7 +31,8 @@ void interactive(m_args *mode_args)
 		if (!fk_id)/* child */
 		{
 			/*TODO: execve doesn't handle which command!!!! */
-			execve(*mode_args->path, *mode_args->tokens, *mode_args->env);
+			/*printf("path = %s\n", *mode_args->path);*/
+			execve(*mode_args->path, *mode_args->tokens, environ);
 			perror("execve");
 			free_safe(mode_args);
 			exit(2);

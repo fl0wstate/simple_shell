@@ -8,11 +8,11 @@
  */
 void (*mode(int mode_stat))(m_args * mode_args)
 {
+#if 0
 	(void)mode_stat;
 	return (interactive);
-#if 0
+#endif
 	if (mode_stat)
 		return (interactive);
 	return (non_interactive);
-#endif
 }

@@ -11,5 +11,5 @@ void EOF_handler(m_args *mode_args, list_t *list_path)
 	free_list(list_path);
 	if (mode_args->free)
 		free_envcpy(&environ);
-	exit(0);
+	exit(mode_args->_errno);
 }

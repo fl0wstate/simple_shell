@@ -7,3 +7,7 @@ checker.bash
 ls
 *.bak*
 _get_cwd.c.bak
+LICENSE
+allowed_functions
+commandgenerator.bash
+hsh

@@ -16,6 +16,7 @@ void interactive(m_args *mode_args)
 		/*TODO: print should be on stderr */
 		_dprintf(STDERR_FILENO, "%s: %u: %s: not found\n",
 				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
+		mode_args->_errno = 127;
 		free_safe(mode_args);
 	}
 	else
@@ -26,7 +27,7 @@ void interactive(m_args *mode_args)
 			perror("fork");
 			free_safe(mode_args);
 			/*TODO: revisit exit status */
-			exit(1);
+			exit(errno);
 		}
 		if (!fk_id)/* child */
 		{
@@ -35,7 +36,8 @@ void interactive(m_args *mode_args)
 			execve(*mode_args->path, *mode_args->tokens, environ);
 			perror("execve");
 			free_safe(mode_args);
-			exit(2);
+			mode_args->_errno = 2;
+			exit(mode_args->_errno);
 		}
 		else/* parent */
 		{

@@ -57,7 +57,7 @@ void change_directory(m_args *mode_args)
  */
 void exit_builtin(m_args *mode_args)
 {
-	int i = 0, is_err = 0, status = 0;
+	ui i = 0, is_err = 0, status = 0;
 
 	if ((*mode_args->tokens)[1])
 	{
@@ -68,11 +68,12 @@ void exit_builtin(m_args *mode_args)
 				_dprintf(STDERR_FILENO, "%s: %u: %s: Illegal number: %s\n",
 						*mode_args->av, *mode_args->cmd_count,
 						(*mode_args->tokens)[0], (*mode_args->tokens)[1]);
+				mode_args->_errno = 2;
 				break;
 			}
 		if (!is_err)
 			status = _atoi((*mode_args->tokens)[1]);
-		free_safe(mode_args);
+		/*free_safe(mode_args);*/
 	}
 	if (!is_err)
 	{
@@ -80,8 +81,9 @@ void exit_builtin(m_args *mode_args)
 			free_envcpy(&environ);
 		free_safe(mode_args);
 		free_list(*mode_args->list_path);
-		exit(status ? status : errno);
+		exit(status ? status : mode_args->_errno);
 	}
+	free_safe(mode_args);
 }
 
 /**
@@ -125,9 +127,9 @@ void unsetenv_builtin(m_args *mode_args)
 
 	if (!(*mode_args->tokens)[1])
 	{
-		/*TODO: handle error when there's no arguments to setenv */
 		_dprintf(STDERR_FILENO, "%s: %u: %s: insufficient arguments\n",
 				*mode_args->av, *mode_args->cmd_count, (*mode_args->tokens)[0]);
+
 	}
 	else
 	{
@@ -135,8 +137,9 @@ void unsetenv_builtin(m_args *mode_args)
 		status = _setenv((*mode_args->tokens)[1], 0, 1);
 		if (status < 0)
 		{
-			/*TODO: print error msg to stderr */
-			_dprintf(STDERR_FILENO, "Oops.. sth went wrong in unsetenv\n");
+		_dprintf(STDERR_FILENO, "%s: %u: %s: bad variable name\n",
+				*mode_args->av, *mode_args->cmd_count, (*mode_args->tokens)[0]);
+		mode_args->_errno = 2;
 		}
 		/*setenv_builtin(mode_args);*/
 	}
@@ -156,6 +159,7 @@ void env_builtin(m_args *mode_args)
 
 	for (i = 0; environ[i]; i++)
 		_dprintf(STDOUT_FILENO, "%s\n", environ[i]);
+	/*TODO: handle args to env */
 	free_safe(mode_args);
 }
 

@@ -87,6 +87,7 @@ struct list_s
  * @cmd_count: integer represents how many time the user interact
  * @list_path: address  of struct `list_t`
  * @free: flag when to free the envrion
+ * @_errno: error number to feed to exit
  *
  * Description: mode arguments structures
  */
@@ -99,6 +100,7 @@ struct mode_arguments
 	char **line;
 	ui *cmd_count;
 	ui free;
+	ui _errno;
 	list_t **list_path;
 };
 

@@ -11,16 +11,18 @@ void change_directory(m_args *mode_args)
 {
 	char *_current_wd = malloc(PATH_MAX);
 
-	/* TODO: handle `-` which responsible to read from `OLDPWD` */
 	if ((*mode_args->tokens)[1] == NULL)
 	{
 		mode_args->free = 1;
-		/* collect the current working directory */
+
 		getcwd(_current_wd, PATH_MAX);
+
 		_setenv("OLDPWD", _current_wd, 1);
-		chdir((_getenv("HOME")));
-		/* update the PWD */
+
+		(_getenv("HOME")) ? chdir(_getenv("HOME")) : chdir(_getenv("PWD"));
+
 		getcwd(_current_wd, PATH_MAX);
+
 		_setenv("PWD", _current_wd, 1);
 	}
 	else if (!_strcmp((*mode_args->tokens)[1], "-"))

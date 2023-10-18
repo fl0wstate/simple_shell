@@ -1,4 +1,5 @@
 #include "main.h"
+#include <unistd.h>
 
 /**
  * _which - search for a command in PATH environment variable
@@ -31,6 +32,7 @@ char *_which(char *cmd, list_t *list_path)
 	{
 		dir = str_concat(head->str, "/");
 		path = str_concat(dir, cmd);
+		/*if (!stat(path, &st))*/
 		if (!stat(path, &st))
 		{
 			free_buf(0, &dir, 0);

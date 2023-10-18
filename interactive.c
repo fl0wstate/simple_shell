@@ -41,6 +41,8 @@ void interactive(m_args *mode_args)
 		else/* parent */
 		{
 			wait(&status);
+			errno = WEXITSTATUS(status);
+			mode_args->_errno = errno;
 			free_safe(mode_args);
 		}
 	}

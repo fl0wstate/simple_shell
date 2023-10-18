@@ -1,6 +1,7 @@
 #ifndef HEADER
 #define HEADER
 #include <bits/types/FILE.h>
+#include <linux/limits.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -8,7 +9,7 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <sys/signal.h>
-#include <stdbool.h>
+#include <errno.h>
 
 /* -------------MACROS------------ */
 #define BUFFER 120
@@ -173,5 +174,6 @@ char *_strcpy(char *dest, char *src);
 ssize_t _getline(char **line, size_t *len, FILE *);
 int _dprintf(int fd, const char *format, ...);
 int _atoi(char *s);
+int _isdigit(int c);
 
 #endif /* HEADER */

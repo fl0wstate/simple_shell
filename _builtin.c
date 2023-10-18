@@ -1,6 +1,5 @@
 #include "main.h"
-#include <linux/limits.h>
-#include <unistd.h>
+
 /**
  * change_directory - move to another directory
  *
@@ -56,15 +55,31 @@ void change_directory(m_args *mode_args)
  */
 void exit_builtin(m_args *mode_args)
 {
-	int status = 0;
+	int i = 0, is_err = 0, status = 0;
 
-	/* exit 98 */
-	status = _atoi((*mode_args->tokens)[1]);
-	free_safe(mode_args);
-	free_list(*mode_args->list_path);
-	if (mode_args->free)
-		free_envcpy(&environ);
-	exit(status < 0 ? 0 : status);
+	if ((*mode_args->tokens)[1])
+	{
+		for (i = 0; (*mode_args->tokens)[1][i]; i++)
+			if (!_isdigit((*mode_args->tokens)[1][i]))
+			{
+				is_err = 1;
+				_dprintf(STDERR_FILENO, "%s: %u: %s: Illegal number: %s\n",
+						*mode_args->av, *mode_args->cmd_count,
+						(*mode_args->tokens)[0], (*mode_args->tokens)[1]);
+				break;
+			}
+		if (!is_err)
+			status = _atoi((*mode_args->tokens)[1]);
+		free_safe(mode_args);
+	}
+	if (!is_err)
+	{
+		if (mode_args->free)
+			free_envcpy(&environ);
+		free_safe(mode_args);
+		free_list(*mode_args->list_path);
+		exit(status ? status : errno);
+	}
 }
 
 /**

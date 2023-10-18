@@ -17,7 +17,7 @@ char *_which(char *cmd, list_t *list_path)
 
 	if (!cmd)
 		return (0);
-	if (_strpbrk(cmd, "~/"))
+	if (_strpbrk(cmd, "~/."))
 	{
 		path = _strdup(cmd);
 		if (!stat(path, &st))

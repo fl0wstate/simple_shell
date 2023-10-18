@@ -1,5 +1,5 @@
 #include "main.h"
-#include <unistd.h>
+
 /**
  * main - simple shell
  * @ac: arguments count

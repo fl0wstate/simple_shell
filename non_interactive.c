@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdlib.h>
 
 /**
  * non_interactive - hanlde non-interactive mode
@@ -7,6 +8,11 @@
 void non_interactive(m_args *mode_args)
 {
 	char *path = *mode_args->path;
+	int fk_id, wstat;
+
+
+	/*TODO: I don't need to exit in non_interactive! why ?*/
+	/*TODO: handle free */
 
 	if (!builtin_handler(mode_args))
 		return;
@@ -15,14 +21,28 @@ void non_interactive(m_args *mode_args)
 		_dprintf(STDERR_FILENO, "%s: %u: %s: not found\n",
 				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
 		mode_args->_errno = 127;
-		exit(mode_args->_errno);
+		/*exit(mode_args->_errno);*/
 	}
 	else
 	{
-		execve(path, *mode_args->tokens, *mode_args->env);
-		mode_args->_errno = 2;
-		perror("execve");
-		exit(mode_args->_errno);
+		fk_id = fork();
+		if (!fk_id)
+		{
+			execve(path, *mode_args->tokens, *mode_args->env);
+			mode_args->_errno = 2;
+			perror("execve");
+			exit(mode_args->_errno);
+		}
+		else
+		{
+			wait(&wstat);
+			if (WIFEXITED(wstat))
+				/* normal termination */
+			{
+				errno = WEXITSTATUS(wstat);
+				mode_args->_errno = errno;
+				/*printf("child exit: %d\n", errno);*/
+			}
+		}
 	}
-
 }

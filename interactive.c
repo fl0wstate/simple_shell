@@ -17,7 +17,6 @@ void interactive(m_args *mode_args)
 		_dprintf(STDERR_FILENO, "%s: %u: %s: not found\n",
 				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
 		mode_args->_errno = 127;
-		free_safe(mode_args);
 	}
 	else
 	{
@@ -43,7 +42,6 @@ void interactive(m_args *mode_args)
 			wait(&status);
 			errno = WEXITSTATUS(status);
 			mode_args->_errno = errno;
-			free_safe(mode_args);
 		}
 	}
 }

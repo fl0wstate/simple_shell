@@ -93,6 +93,7 @@ struct list_s
  */
 struct mode_arguments
 {
+	char ***cmd_toks;
 	char ***tokens;
 	char ***env;
 	char **av;
@@ -131,7 +132,7 @@ void (*mode(int fd))(m_args *mode_arguments);
 void interactive(m_args *mode_arguments);
 void non_interactive(m_args *mode_arguments);
 void free_buf(char ***buff, char **buf, int flag);
-char **tokenize_line(char *line);
+char **tokenize_line(char *line, char *delim);
 char *str_concat(char *s1, char *s2);
 int getline_error(char *str);
 void prompt(void);
@@ -158,7 +159,7 @@ int set_envconfig(env_config *);
 /* addons from MK */
 void exit_builtin(m_args *mode_args);
 void change_directory(m_args *mode_args);
-int count_tokens(char *str, char delim);
+int count_tokens(char *str, char *delim);
 /* -------------------MOCKS---------------------- */
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(env_config *);

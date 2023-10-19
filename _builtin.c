@@ -45,7 +45,7 @@ void change_directory(m_args *mode_args)
 					**mode_args->tokens, (*mode_args->tokens)[1]);
 	}
 	free(_current_wd);
-	free_safe(mode_args);
+	/*free_safe(mode_args);*/
 }
 /**
  * exit_builtin - exits the shell
@@ -73,9 +73,8 @@ void exit_builtin(m_args *mode_args)
 			}
 		if (!is_err)
 			status = _atoi((*mode_args->tokens)[1]);
-		/*free_safe(mode_args);*/
 	}
-	free_safe(mode_args);
+	/*free_safe(mode_args);*/
 	if (!is_err)
 	{
 		if (mode_args->free)
@@ -84,7 +83,6 @@ void exit_builtin(m_args *mode_args)
 		free_list(*mode_args->list_path);
 		exit(status ? status : mode_args->_errno);
 	}
-	/*free_safe(mode_args);*/
 }
 
 /**
@@ -113,7 +111,7 @@ void setenv_builtin(m_args *mode_args)
 			_dprintf(STDERR_FILENO, "Oops.. sth went wrong in setenv\n");
 		}
 	}
-	free_safe(mode_args);
+	/*free_safe(mode_args);*/
 }
 
 /**
@@ -144,7 +142,7 @@ void unsetenv_builtin(m_args *mode_args)
 		}
 		/*setenv_builtin(mode_args);*/
 	}
-	free_safe(mode_args);
+	/*free_safe(mode_args);*/
 }
 
 /**
@@ -172,6 +170,6 @@ void env_builtin(m_args *mode_args)
 			_dprintf(STDOUT_FILENO, "%s\n", environ[i]);
 		/*TODO: handle args to env */
 	}
-	free_safe(mode_args);
+	/*free_safe(mode_args);*/
 }
 

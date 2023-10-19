@@ -6,11 +6,11 @@
  *
  * Return: array of string
  */
-char **tokenize_line(char *line)
+char **tokenize_line(char *line, char *delim)
 {
 	int i = 0;
-	char *delim = " ", *tok = 0;
-	char **args = malloc(sizeof(*args) * (count_words(line) + 1));
+	char *tok = 0;
+	char **args = malloc(sizeof(*args) * (count_tokens(line, delim) + 1));
 
 	if (!args)
 	{

@@ -29,15 +29,16 @@ int count_words(char *str)
 
 	return (count);
 }
+
 /**
- * count_tokens - count number of words in a string
+ * count_tokens - count number of tokens in a string based on delmitier
  * @str: string pointer
- * @delim: delimeter char value
+ * @delim: string pointer
  *
- * Return: number of words,
+ * Return: number of tokens,
  * 0 on failure
  */
-int count_tokens(char *str, char delim)
+int count_tokens(char *str, char *delim)
 {
 	int len = 0, count = 0;
 
@@ -45,17 +46,17 @@ int count_tokens(char *str, char delim)
 		return (0);
 	for (; str[len]; len++)
 	{
-		if ((int)(str[len]) == (int)(delim))
+		if (!str[len + 1])
+			break;
+		if (_strchr(delim, str[len]))
 			continue;
-		if ((int)(str[len + 1]) == (int)(delim))
+		if (_strchr(delim, str[len + 1]))
 			count++;
 	}
 	if (!len)
 		return (0);
-	if ((int)(str[len - 1]) != (int)(delim))
+	if (!_strchr(delim, str[len - 1]))
 		count++;
-	if (count == 0)
-		return (0);
 
 	return (count);
 }

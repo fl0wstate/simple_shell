@@ -128,6 +128,7 @@ void unsetenv_builtin(m_args *mode_args)
 	{
 		_dprintf(STDERR_FILENO, "%s: %u: %s: insufficient arguments\n",
 				*mode_args->av, *mode_args->cmd_count, (*mode_args->tokens)[0]);
+		mode_args->_errno = 1;
 
 	}
 	else
@@ -136,9 +137,9 @@ void unsetenv_builtin(m_args *mode_args)
 		status = _setenv((*mode_args->tokens)[1], 0, 1);
 		if (status < 0)
 		{
-		_dprintf(STDERR_FILENO, "%s: %u: %s: bad variable name\n",
-				*mode_args->av, *mode_args->cmd_count, (*mode_args->tokens)[0]);
-		mode_args->_errno = 2;
+			_dprintf(STDERR_FILENO, "%s: %u: %s: bad variable name\n",
+					*mode_args->av, *mode_args->cmd_count, (*mode_args->tokens)[0]);
+			mode_args->_errno = 2;
 		}
 		/*setenv_builtin(mode_args);*/
 	}

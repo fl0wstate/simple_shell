@@ -15,7 +15,6 @@
 #define BUFFER 120
 #define REOF 0
 #define BUFF_SIZE 1024
-/* Debugging */
 
 /* ------------ALIASES------------ */
 typedef unsigned int long uli;
@@ -160,6 +159,7 @@ int set_envconfig(env_config *);
 void exit_builtin(m_args *mode_args);
 void change_directory(m_args *mode_args);
 int count_tokens(char *str, char *delim);
+
 /* -------------------MOCKS---------------------- */
 int _setenv(const char *name, const char *value, int overwrite);
 int _unsetenv(env_config *);

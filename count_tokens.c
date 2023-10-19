@@ -46,9 +46,7 @@ int count_tokens(char *str, char *delim)
 		return (0);
 	for (; str[len]; len++)
 	{
-		if (!str[len + 1])
-			break;
-		if (_strchr(delim, str[len]))
+		if (!str[len + 1] || _strchr(delim, str[len]))
 			continue;
 		if (_strchr(delim, str[len + 1]))
 			count++;

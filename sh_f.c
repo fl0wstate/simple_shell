@@ -12,9 +12,9 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 {
 	ssize_t bytes;
 	size_t n = 0;
-	ui cmd_count = 0, mode_stat, i = 0, j = 0;
+	ui cmd_count = 0, mode_stat, i = 0;
 	char **tokens = 0, **cmd_toks = 0;
-	char *line = 0, *path = 0, *cmd = 0;
+	char *line = 0, *path = 0;
 	list_t *list_path = path_list();
 	m_args mode_args;
 
@@ -33,19 +33,19 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 		mode_stat = isatty(STDIN_FILENO);
 		if (mode_stat)
 			_dprintf(STDOUT_FILENO, "($) ");
-		bytes = getline(&line, &n, stdin);
+		bytes = _getline(&line, &n, stdin);
 		if (bytes == -1)
 			EOF_handler(&mode_args, list_path);
 		line[bytes - 1] = 0;
 		cmd_count++;
 		/*TODO: tokenize the line base on (';', '&&', '||')*/
 		cmd_toks = tokenize_line(line, ";");
-		if (!*cmd_toks)
+		if (!**mode_args.cmd_toks)
 		{
 			free_safe(&mode_args);
 			continue;
 		}
-		for (i = 0; cmd_toks[i]; i++)
+		for (i = 0; cmd_toks && cmd_toks[i]; i++)
 		{
 			tokens = tokenize_line(cmd_toks[i], " ");
 			path = _which(tokens[0], list_path);

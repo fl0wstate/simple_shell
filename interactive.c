@@ -6,7 +6,7 @@
  */
 void interactive(m_args *mode_args)
 {
-	int status, i = 0,
+	int status,
 	is_replacement = (*mode_args->tokens)[1] &&
 		    _strcmp((*mode_args->tokens)[1], "echo") &&
 		    (*mode_args->tokens)[1][0] == '$';
@@ -37,15 +37,9 @@ void interactive(m_args *mode_args)
 			if (is_replacement)
 			{
 				expansion_handler((*mode_args->tokens)[1], mode_args);
-				for (i = 0; mode_args->args[i]; i++)
-					printf("args[%d] = %s\n", i, mode_args->args[i]);
 			}
-#if 0
 			execve(*mode_args->path,
 					!is_replacement ? *mode_args->tokens : mode_args->args, environ);
-#endif
-			execve(*mode_args->path,
-					*mode_args->tokens, environ);
 			perror("execve");
 			free_safe(mode_args);
 			mode_args->_errno = 2;

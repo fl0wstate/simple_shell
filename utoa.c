@@ -1,5 +1,11 @@
 #include "main.h"
 
+/**
+ * utoa - convert unsigned int to string
+ * @n: unsigned integer
+ *
+ * Return: string pointer to number
+ */
 char *utoa(ui n)
 {
 	char *buf = malloc(BUFFER);
@@ -10,6 +16,14 @@ char *utoa(ui n)
 	return (buf);
 }
 
+/**
+ * _utoa - helper function recursivly assinged value to buffer
+ * @n: unsigned integer
+ * @buf: buffer of size 1024
+ * @idx: cursor to fill the buffer
+ *
+ * Return: string pointer to number
+ */
 char *_utoa(unsigned int n, char *buf, unsigned int idx)
 {
 	if (n < 10)

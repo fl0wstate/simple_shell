@@ -99,7 +99,8 @@ struct mode_arguments
 	char ***cmd_toks;
 	char ***tokens;
 	char ***env;
-	char *args[2];
+	char *args[3];
+	char PATH[BUFF_SIZE];
 	char **av;
 	char **path;
 	char **line;
@@ -148,7 +149,7 @@ void prompt(void);
 list_t *prepend(list_t **head, const char *str);
 list_t *append(list_t **head, const char *str);
 void free_list(list_t *head);
-list_t *path_list(void);
+list_t *path_list(m_args *mode_args);
 char *start_shell(void);
 char **tokenize_command(char *cmd);
 int execute_command(char **tokens, char *cmd, char **argv, int count, char *s);

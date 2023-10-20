@@ -15,8 +15,8 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 	ui cmd_count = 0, mode_stat, i = 0;
 	char **tokens = 0, **cmd_toks = 0;
 	char *line = 0, *path = 0;
-	list_t *list_path = path_list();
 	m_args mode_args;
+	list_t *list_path = path_list(&mode_args);
 
 	mode_args.cmd_toks = &cmd_toks;
 	mode_args.tokens = &tokens;

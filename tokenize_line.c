@@ -3,6 +3,7 @@
 /**
  * tokenize_line - tokenize the line from stream
  * @line: line read from stream
+ * @delim: delimiter on which to tokenize
  *
  * Return: array of string
  */

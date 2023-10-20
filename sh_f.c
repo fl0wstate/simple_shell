@@ -28,6 +28,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 	mode_args.list_path = &list_path;
 	mode_args.free = 0;
 	mode_args._errno = 0;
+	mode_args.ppid = getppid();
 	while (-1)
 	{
 		mode_stat = isatty(STDIN_FILENO);

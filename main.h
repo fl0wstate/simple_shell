@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
@@ -78,15 +79,18 @@ struct list_s
 
 /**
  * struct mode_arguments - mode_hanlder (non/interactive)
+ * @cmd_toks: tokens represent the command from
  * @tokens: address of array of strings
  * @env: address of environment variables
  * @av: argument vector
+ * @args: custom argument
  * @path: address to the executable file
  * @line: address of line read from stdin
  * @cmd_count: integer represents how many time the user interact
  * @list_path: address  of struct `list_t`
  * @free: flag when to free the envrion
  * @_errno: error number to feed to exit
+ * @ppid: shell process id
  *
  * Description: mode arguments structures
  */
@@ -95,12 +99,14 @@ struct mode_arguments
 	char ***cmd_toks;
 	char ***tokens;
 	char ***env;
+	char *args[2];
 	char **av;
 	char **path;
 	char **line;
 	ui *cmd_count;
 	ui free;
 	ui _errno;
+	pid_t ppid;
 	list_t **list_path;
 };
 
@@ -120,6 +126,10 @@ struct builtin_commands
 };
 
 /* -------------------UTILS----------------- */
+void str_rev(char *str);
+char *utoa(ui n);
+char *_utoa(ui n, char *buf, ui idx);
+char **expansion_handler(char *str, m_args *mode_args);
 void EOF_handler(m_args *mode_args, list_t *list_path);
 void free_safe(m_args *mode_args);
 void env_builtin(m_args *mode_args);

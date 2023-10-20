@@ -107,6 +107,8 @@ struct mode_arguments
 	ui *cmd_count;
 	ui free;
 	ui _errno;
+	ui OR;
+	ui AND;
 	pid_t ppid;
 	list_t **list_path;
 };

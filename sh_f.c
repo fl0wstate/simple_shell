@@ -12,7 +12,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 {
 	ssize_t bytes;
 	size_t n = 0;
-	ui cmd_count = 0, mode_stat, i = 0;
+	ui cmd_count = 0, mode_stat, i = 0, j = 0;
 	char **tokens = 0, **cmd_toks = 0;
 	char *line = 0, *path = 0;
 	m_args mode_args;
@@ -29,6 +29,8 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 	mode_args.free = 0;
 	mode_args._errno = 0;
 	mode_args.ppid = getppid();
+	mode_args.AND = 0;
+	mode_args.OR = 0;
 	while (-1)
 	{
 		mode_stat = isatty(STDIN_FILENO);
@@ -39,8 +41,22 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 			EOF_handler(&mode_args, list_path);
 		line[bytes - 1] = 0;
 		cmd_count++;
+		for (; line[j]; j++)
+		{
+			if (line[j] == '&' && !mode_args.AND)
+			{
+				mode_args.AND = 1;
+				printf("AND\n");
+			}
+			if (line[j] == '|' && !mode_args.OR)
+			{
+				mode_args.OR = 1;
+				printf("OR\n");
+
+			}
+		}
 		/*TODO: tokenize the line base on (';', '&&', '||')*/
-		cmd_toks = tokenize_line(line, ";");
+		cmd_toks = tokenize_line(line, ";&|");
 		if (!**mode_args.cmd_toks)
 		{
 			free_safe(&mode_args);

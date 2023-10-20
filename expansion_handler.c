@@ -23,7 +23,7 @@ char **expansion_handler(char *str, m_args *mode_args)
 			break;
 		default:
 			mode_args->args[0] = (*mode_args->tokens)[0];
-			mode_args->args[1] = _strdup(_getenv(str + 1));
+			mode_args->args[1] = _getenv(str + 1);
 			mode_args->args[2] = 0;
 	}
 

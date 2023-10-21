@@ -16,6 +16,8 @@
 #define BUFFER 120
 #define REOF 0
 #define BUFF_SIZE 1024
+#define AND '&'
+#define OR '|'
 
 /* ------------ALIASES------------ */
 typedef unsigned int long uli;
@@ -100,6 +102,7 @@ struct mode_arguments
 	char ***tokens;
 	char ***env;
 	char *args[3];
+	char logcials[BUFFER];
 	char PATH[BUFF_SIZE];
 	char **av;
 	char **path;
@@ -107,8 +110,6 @@ struct mode_arguments
 	ui *cmd_count;
 	ui free;
 	ui _errno;
-	ui OR;
-	ui AND;
 	pid_t ppid;
 	list_t **list_path;
 };

@@ -98,9 +98,12 @@ void setenv_builtin(m_args *mode_args)
 
 	if (!(mode_args->tokens)[1] || !(mode_args->tokens)[2])
 	{
+		return;
+#if 0
 		/*TODO: handle error when there's no arguments to setenv */
 		_dprintf(STDERR_FILENO, "%s: %u: %s: insufficient arguments\n",
 				*mode_args->av, *mode_args->cmd_count, (mode_args->tokens)[0]);
+#endif
 	}
 	else
 	{
@@ -127,9 +130,12 @@ void unsetenv_builtin(m_args *mode_args)
 
 	if (!(mode_args->tokens)[1])
 	{
+		return;
+#if 0
 		_dprintf(STDERR_FILENO, "%s: %u: %s: insufficient arguments\n",
 				*mode_args->av, *mode_args->cmd_count, (mode_args->tokens)[0]);
 		mode_args->_errno = 1;
+#endif
 
 	}
 	else
@@ -160,10 +166,13 @@ void env_builtin(m_args *mode_args)
 
 	if ((mode_args->tokens)[1])
 	{
+
+#if 0
 		/* error */
 		mode_args->_errno = 127;
 		_dprintf(STDERR_FILENO, "%s: %s: No such file or directory\n",
 				(mode_args->tokens)[0], (mode_args->tokens)[1]);
+#endif
 
 	}
 	else

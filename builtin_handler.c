@@ -24,7 +24,7 @@ int builtin_handler(m_args *mode_args)
 	while (builtins[i].cmd)
 	{
 		if (!_strcmp((char *)builtins[i].cmd,
-					(char *)(*mode_args->tokens)[0]))
+					(char *)(mode_args->tokens)[0]))
 		{
 			builtins[i].builtin(mode_args);
 			return (0);

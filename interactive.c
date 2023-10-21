@@ -6,19 +6,16 @@
  */
 void interactive(m_args *mode_args)
 {
-	int status,
-	is_replacement = (*mode_args->tokens)[1] &&
-		    _strcmp((*mode_args->tokens)[1], "echo") &&
-		    (*mode_args->tokens)[1][0] == '$';
 	pid_t fk_id;
+	int status, is_replacement = (mode_args->tokens)[1] &&
+		_strcmp((mode_args->tokens)[1], "echo") && (mode_args->tokens)[1][0] == '$';
 
 	if (!builtin_handler(mode_args))
 		return;
-	if (!*mode_args->path)
+	if (!mode_args->path)
 	{
-		/*TODO: print should be on stderr */
 		_dprintf(STDERR_FILENO, "%s: %u: %s: not found\n",
-				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
+				*mode_args->av, *mode_args->cmd_count, *mode_args->tokens);
 		mode_args->_errno = 127;
 	}
 	else
@@ -28,18 +25,14 @@ void interactive(m_args *mode_args)
 		{
 			perror("fork");
 			free_safe(mode_args);
-			/*TODO: revisit exit status */
 			exit(errno);
 		}
 		if (!fk_id)/* child */
 		{
-			/*TODO: execve doesn't handle which command!!!! */
 			if (is_replacement)
-			{
-				expansion_handler((*mode_args->tokens)[1], mode_args);
-			}
-			execve(*mode_args->path,
-					!is_replacement ? *mode_args->tokens : mode_args->args, environ);
+				expansion_handler((mode_args->tokens)[1], mode_args);
+			execve(mode_args->path,
+					!is_replacement ? mode_args->tokens : mode_args->args, environ);
 			perror("execve");
 			free_safe(mode_args);
 			mode_args->_errno = 2;

@@ -6,7 +6,7 @@
  */
 void non_interactive(m_args *mode_args)
 {
-	char *path = *mode_args->path;
+	char *path = mode_args->path;
 	int fk_id, wstat;
 
 	/*TODO: I don't need to exit in non_interactive! why ?*/
@@ -16,7 +16,7 @@ void non_interactive(m_args *mode_args)
 	if (!path)
 	{
 		_dprintf(STDERR_FILENO, "%s: %u: %s: not found\n",
-				*mode_args->av, *mode_args->cmd_count, **mode_args->tokens);
+				*mode_args->av, *mode_args->cmd_count, *mode_args->tokens);
 		mode_args->_errno = 127;
 		/*free_safe(mode_args);*/
 		/*exit(mode_args->_errno);*/
@@ -26,7 +26,7 @@ void non_interactive(m_args *mode_args)
 		fk_id = fork();
 		if (!fk_id)
 		{
-			execve(path, *mode_args->tokens, *mode_args->env);
+			execve(path, mode_args->tokens, *mode_args->env);
 			mode_args->_errno = 2;
 			perror("execve");
 			/*free_safe(mode_args);*/

@@ -93,20 +93,23 @@ struct list_s
  * @free: flag when to free the envrion
  * @_errno: error number to feed to exit
  * @ppid: shell process id
+ * @PATH: env variable
+ * @logcials: array of char contains values of `AND` and/or `OR`
+ * and it has initial size of `BUFFER`
  *
  * Description: mode arguments structures
  */
 struct mode_arguments
 {
-	char ***cmd_toks;
-	char ***tokens;
+	char **cmd_toks;
+	char **tokens;
 	char ***env;
 	char *args[3];
 	char logcials[BUFFER];
 	char PATH[BUFF_SIZE];
 	char **av;
-	char **path;
-	char **line;
+	char *path;
+	char *line;
 	ui *cmd_count;
 	ui free;
 	ui _errno;
@@ -130,6 +133,9 @@ struct builtin_commands
 };
 
 /* -------------------UTILS----------------- */
+void run(int mode_stat, int idx, m_args *mode_args);
+void executor(int logical_count, int mode_stat, m_args *mode_args);
+int set_logicals(m_args *mode_args);
 void str_rev(char *str);
 char *utoa(ui n);
 char *_utoa(ui n, char *buf, ui idx);

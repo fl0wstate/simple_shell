@@ -24,6 +24,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 	mode_args.line = 0;
 	mode_args.cmd_count = &cmd_count;
 	mode_args.list_path = &list_path;
+	mode_args.alias = 0;
 	mode_args.free = 0;
 	mode_args._errno = 0;
 	mode_args.ppid = getpid();
@@ -34,7 +35,7 @@ int main(__attribute__((unused))int ac, char **av, char **env)
 			_dprintf(STDOUT_FILENO, "($) ");
 		bytes = _getline(&mode_args.line, &n, stdin);
 		if (bytes == EOF)
-			EOF_handler(&mode_args, list_path);
+			EOF_handler(&mode_args);
 		mode_args.line[bytes - 1] = 0;
 		cmd_count++;
 		logical_count = set_logicals(&mode_args);

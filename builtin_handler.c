@@ -18,6 +18,7 @@ int builtin_handler(m_args *mode_args)
 		{"env", env_builtin},
 		{"setenv", setenv_builtin},
 		{"unsetenv", unsetenv_builtin},
+		{"alias", alias_builtin},
 		{NULL, NULL}
 	};
 
@@ -33,3 +34,4 @@ int builtin_handler(m_args *mode_args)
 	}
 	return (1);
 }
+

@@ -28,6 +28,7 @@ typedef struct mode_arguments m_args;
 typedef struct builtin_commands builtin_t;
 typedef struct format_specifiers specifiers_x;
 typedef struct environ_configuration env_config;
+typedef struct alias_s alias_t;
 
 /* ----------GLOBALS--------------- */
 extern char **environ;
@@ -80,6 +81,21 @@ struct list_s
 };
 
 /**
+ * struct alias_s - singly linked list to store aliases
+ * @name: alias name
+ * @value: alias value
+ * @next: points to the next node
+ *
+ * Description: singly linked list node structure
+ */
+struct alias_s
+{
+	char *name;
+	char *value;
+	struct alias_s *next;
+};
+
+/**
  * struct mode_arguments - mode_hanlder (non/interactive)
  * @cmd_toks: tokens represent the command from
  * @tokens: address of array of strings
@@ -90,6 +106,7 @@ struct list_s
  * @line: address of line read from stdin
  * @cmd_count: integer represents how many time the user interact
  * @list_path: address  of struct `list_t`
+ * @alias: struct `alias_s`
  * @free: flag when to free the envrion
  * @_errno: error number to feed to exit
  * @ppid: shell process id
@@ -114,6 +131,7 @@ struct mode_arguments
 	ui free;
 	ui _errno;
 	pid_t ppid;
+	alias_t *alias;
 	list_t **list_path;
 };
 
@@ -133,6 +151,10 @@ struct builtin_commands
 };
 
 /* -------------------UTILS----------------- */
+char *get_alias(char *name, m_args *mode_args);
+void print_alias(alias_t *node, int flag);
+void mutate_aliases(char *name, char *value, m_args *mode_args);
+void free_aliases(alias_t *head);
 void run(int mode_stat, int idx, m_args *mode_args);
 void executor(int logical_count, int mode_stat, m_args *mode_args);
 int set_logicals(m_args *mode_args);
@@ -140,11 +162,12 @@ void str_rev(char *str);
 char *utoa(ui n);
 char *_utoa(ui n, char *buf, ui idx);
 char **expansion_handler(char *str, m_args *mode_args);
-void EOF_handler(m_args *mode_args, list_t *list_path);
+void EOF_handler(m_args *mode_args);
 void free_safe(m_args *mode_args);
 void env_builtin(m_args *mode_args);
 void unsetenv_builtin(m_args *mode_args);
 void setenv_builtin(m_args *mode_args);
+void alias_builtin(m_args *mode_args);
 int builtin_handler(m_args *mode_args);
 void free_envcpy(char ***cpy);
 void (*mode(int fd))(m_args *mode_arguments);

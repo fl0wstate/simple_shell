@@ -81,6 +81,7 @@ void exit_builtin(m_args *mode_args)
 			free_envcpy(&environ);
 		free_safe(mode_args);
 		free_list(*mode_args->list_path);
+		free_aliases(mode_args->alias);
 		exit(status ? status : mode_args->_errno);
 	}
 }

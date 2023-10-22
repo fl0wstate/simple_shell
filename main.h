@@ -121,7 +121,7 @@ struct mode_arguments
 	char **cmd_toks;
 	char **tokens;
 	char ***env;
-	char *args[3];
+	char *args[BUFFER];
 	char logcials[BUFFER];
 	char PATH[BUFF_SIZE];
 	char **av;
@@ -151,6 +151,8 @@ struct builtin_commands
 };
 
 /* -------------------UTILS----------------- */
+alias_t *append_alias(alias_t **head, char *name, char *value);
+char *_get_alias(char *name, m_args *mode_args);
 char *get_alias(char *name, m_args *mode_args);
 void print_alias(alias_t *node, int flag);
 void mutate_aliases(char *name, char *value, m_args *mode_args);
@@ -161,7 +163,7 @@ int set_logicals(m_args *mode_args);
 void str_rev(char *str);
 char *utoa(ui n);
 char *_utoa(ui n, char *buf, ui idx);
-char **expansion_handler(char *str, m_args *mode_args);
+char **expansion_handler(m_args *mode_args);
 void EOF_handler(m_args *mode_args);
 void free_safe(m_args *mode_args);
 void env_builtin(m_args *mode_args);

@@ -38,7 +38,7 @@ void executor(int logical_count, int mode_stat, m_args *mode_args)
  */
 void run(int mode_stat, int idx, m_args *mode_args)
 {
-	mode_args->tokens = tokenize_line(mode_args->cmd_toks[idx], " ");
+	mode_args->tokens = tokenize_line(mode_args->cmd_toks[idx], "\t ");
 	mode_args->path = _which(mode_args->tokens[0], *mode_args->list_path);
 	mode(mode_stat)(mode_args);
 	free_buf(&mode_args->tokens, 0, 1);

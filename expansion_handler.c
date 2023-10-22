@@ -2,30 +2,41 @@
 
 /**
  * expansion_handler - handles variable replacement
- * @str: string pointer contains the expanded variable
  * @mode_args: struct (read main.h)
  *
  * Return: array of string represent arguments to `execve` syscall
  */
-char **expansion_handler(char *str, m_args *mode_args)
+char **expansion_handler(m_args *mode_args)
 {
-	switch (str[1])
+	int i;
+	char *str;
+
+	mode_args->args[0] = mode_args->tokens[0];
+	for (i = 1; mode_args->tokens[i]; i++)
 	{
-		case '$':
-			mode_args->args[0] = (mode_args->tokens)[0];
-			mode_args->args[1] = utoa(mode_args->ppid);
-			mode_args->args[2] = 0;
-			break;
-		case '?':
-			mode_args->args[0] = (mode_args->tokens)[0];
-			mode_args->args[1] = utoa(mode_args->_errno);
-			mode_args->args[2] = 0;
-			break;
-		default:
-			mode_args->args[0] = (mode_args->tokens)[0];
-			mode_args->args[1] = _getenv(str + 1);
-			mode_args->args[2] = 0;
+		str = mode_args->tokens[i];
+
+		/* escape 1st back-slash */
+		if (str[0] == '\\')
+			str++;
+		if (str[0] == '\\' || !str[1])
+		{
+			mode_args->args[i] = str;
+			continue;
+		}
+		switch (str[1])
+		{
+			case '$':
+				mode_args->args[i] = utoa(mode_args->ppid);
+				break;
+			case '?':
+				mode_args->args[i] = utoa(mode_args->_errno);
+				break;
+			default:
+				mode_args->args[i] = _getenv(str + 1);
+		}
 	}
+	mode_args->args[i] = 0;
 
 	return (mode_args->args);
 }

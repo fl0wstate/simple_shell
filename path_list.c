@@ -1,4 +1,5 @@
 #include "main.h"
+
 /**
  * path_list - creates a linkedlist of PATH directories
  * @mode_args: struct (read main.h)
@@ -7,10 +8,14 @@
  */
 list_t *path_list(m_args *mode_args)
 {
-	char *tok = 0, *delim = "PATH=:";
+	char *tok = 0, *delim = ":";
 	list_t *head = 0;
+	char *PATH = _getenv("PATH");
 
-	_strcpy(mode_args->PATH, _getenv("PATH"));
+	if (!PATH)
+		return (0);
+
+	_strcpy(mode_args->PATH, PATH);
 
 	tok = _strtok(mode_args->PATH, delim);
 	while (tok)

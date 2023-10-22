@@ -1,5 +1,4 @@
 #include "main.h"
-#include <unistd.h>
 
 /**
  * _which - search for a command in PATH environment variable

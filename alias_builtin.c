@@ -1,39 +1,37 @@
 #include "main.h"
 
-char *_get_alias(char *name, m_args *mode_args);
 /**
  * alias_builtin - alias builtin command handler
  * @mode_args: struct (read main.h)
  */
 void alias_builtin(m_args *mode_args)
 {
-	char *name;
-	char *value;
+	int i = 0;
+	char *name, *value;
 	alias_t *tmp = mode_args->alias;
 
-	if (!mode_args->tokens[1])
+	if (!mode_args->tokens[i + 1])
 	{
 		/*TODO: print list of aliases if any */
-		(print_alias(tmp, 1));
+		print_alias(tmp, 1);
 		return;
 	}
-	name = _strtok(mode_args->tokens[1], "=");
-	value = _strtok(0, "=");
-	if (!value)
+	while (mode_args->tokens[++i])
 	{
-		for (; tmp; tmp = tmp->next)
-			if (!_strcmp(tmp->name, name))
-				break;
-		/*TODO: print that alias if any */
-		(print_alias(tmp, 0));
-		return;
-	}
-
-	while (name && value)
-	{
-		mutate_aliases(name, value, mode_args);
-		name = _strtok(0, "=");
+		name = _strtok(mode_args->tokens[i], "=");
 		value = _strtok(0, "=");
+		if (!value)
+		{
+			for (tmp = mode_args->alias; tmp; tmp = (tmp)->next)
+				if (!_strcmp((tmp)->name, name))
+				{
+					/*TODO: print that alias */
+					print_alias(tmp, 0);
+					break;
+				}
+		}
+		else
+			mutate_aliases(name, value, mode_args);
 	}
 }
 
@@ -46,7 +44,7 @@ void alias_builtin(m_args *mode_args)
 void mutate_aliases(char *name, char *value, m_args *mode_args)
 {
 	int overwrite = 0;
-	alias_t *alias, *tmp = mode_args->alias;
+	alias_t *tmp = mode_args->alias;
 
 	while (tmp)
 	{
@@ -57,20 +55,13 @@ void mutate_aliases(char *name, char *value, m_args *mode_args)
 		}
 		tmp = tmp->next;
 	}
-
 	if (overwrite)
 	{
 		free(tmp->value);
 		tmp->value = _strdup(value);
 	}
-	else
-	{
-		alias = malloc(sizeof(alias_t));
-		alias->name = _strdup(name);
-		alias->value = _strdup(value);
-		alias->next = mode_args->alias;
-		mode_args->alias = alias;
-	}
+	else /* append alias */
+		append_alias(&mode_args->alias, name, value);
 }
 
 /**
@@ -84,32 +75,17 @@ void print_alias(alias_t *node, int flag)
 	alias_t *head = node;
 
 	if (!flag)
-		_dprintf(STDOUT_FILENO, "%s=%s\n", node->name, node->value);
+		_dprintf(STDOUT_FILENO, "%s='%s'\n", node->name, node->value);
 	else
 	{
 		while (head)
 		{
-			_dprintf(STDOUT_FILENO, "%s=%s\n", head->name, head->value);
+			_dprintf(STDOUT_FILENO, "%s='%s'\n", head->name, head->value);
 			head = head->next;
 		}
 	}
 }
 
-/**
- * free_aliases - frees alias linked list
- * @head: pointer to the list head
- */
-void free_aliases(alias_t *head)
-{
-	if (head)
-	{
-		free_aliases(head->next);
-		free(head->name);
-		free(head->value);
-		free(head);
-		head = 0;
-	}
-}
 
 /**
  * get_alias - get alias by name

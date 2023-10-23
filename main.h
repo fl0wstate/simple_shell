@@ -18,6 +18,7 @@
 #define BUFF_SIZE 1024
 #define AND '&'
 #define OR '|'
+#define SEPARATOR ';'
 
 /* ------------ALIASES------------ */
 typedef unsigned int long uli;
@@ -105,13 +106,15 @@ struct alias_s
  * @path: address to the executable file
  * @line: address of line read from stdin
  * @cmd_count: integer represents how many time the user interact
+ * @logical_count: number of logicals `AND`, `OR`
+ * @cmd_separator: flag if set then there's command separators
  * @list_path: address  of struct `list_t`
  * @alias: struct `alias_s`
  * @free: flag when to free the envrion
  * @_errno: error number to feed to exit
- * @ppid: shell process id
+ * @ppid: calling process id
  * @PATH: env variable
- * @logcials: array of char contains values of `AND` and/or `OR`
+ * @logicals: array of char contains values of `AND` and/or `OR`
  * and it has initial size of `BUFFER`
  *
  * Description: mode arguments structures
@@ -122,12 +125,14 @@ struct mode_arguments
 	char **tokens;
 	char ***env;
 	char *args[BUFFER];
-	char logcials[BUFFER];
+	char logicals[BUFFER];
 	char PATH[BUFF_SIZE];
 	char **av;
 	char *path;
 	char *line;
 	ui *cmd_count;
+	ui logical_count;
+	ui cmd_separator;
 	ui free;
 	ui _errno;
 	pid_t ppid;
@@ -151,6 +156,7 @@ struct builtin_commands
 };
 
 /* -------------------UTILS----------------- */
+int _is_replacement(m_args *mode_args);
 alias_t *append_alias(alias_t **head, char *name, char *value);
 char *_get_alias(char *name, m_args *mode_args);
 char *get_alias(char *name, m_args *mode_args);
@@ -158,7 +164,7 @@ void print_alias(alias_t *node, int flag);
 void mutate_aliases(char *name, char *value, m_args *mode_args);
 void free_aliases(alias_t *head);
 void run(int mode_stat, int idx, m_args *mode_args);
-void executor(int logical_count, int mode_stat, m_args *mode_args);
+void executor(int mode_stat, m_args *mode_args);
 int set_logicals(m_args *mode_args);
 void str_rev(char *str);
 char *utoa(ui n);

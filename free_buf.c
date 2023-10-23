@@ -14,6 +14,7 @@ void free_buf(char ***buff, char **buf, int flag)
 		{
 			free(*buff);
 			*buff = 0;
+			buff = 0;
 		}
 	}
 	else
@@ -22,6 +23,7 @@ void free_buf(char ***buff, char **buf, int flag)
 		{
 			free(*buf);
 			*buf = 0;
+			buf = 0;
 		}
 	}
 }

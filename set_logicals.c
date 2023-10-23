@@ -12,20 +12,25 @@ int set_logicals(m_args *mode_args)
 
 	for (i = 0, j = 0; mode_args->line && (mode_args->line)[i]; i++)
 	{
-		if ((mode_args->line)[i] == '&')
+		if ((mode_args->line)[i] == SEPARATOR)
 		{
-			mode_args->logcials[j++] = AND;
+			mode_args->logicals[j++] = SEPARATOR;
+			continue;
+		}
+		if ((mode_args->line)[i] == AND)
+		{
+			mode_args->logicals[j++] = AND;
 			i++;
 			continue;
 		}
-		if ((mode_args->line)[i] == '|')
+		if ((mode_args->line)[i] == OR)
 		{
-			mode_args->logcials[j++] = OR;
+			mode_args->logicals[j++] = OR;
 			i++;
 			continue;
 		}
 	}
-	mode_args->logcials[j] = 0;
+	mode_args->logicals[j] = 0;
 
 	return (j);
 }

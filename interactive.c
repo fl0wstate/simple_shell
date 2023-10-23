@@ -7,9 +7,7 @@
 void interactive(m_args *mode_args)
 {
 	pid_t fk_id;
-	int status, is_replacement = (mode_args->tokens)[1] &&
-	!_strcmp((mode_args->tokens)[0], "echo") &&
-	_strpbrk(mode_args->tokens[1], "$");
+	int status, is_replacement = _is_replacement(mode_args);
 	char *alias = get_alias(*mode_args->tokens, mode_args);
 
 	if (!builtin_handler(mode_args))

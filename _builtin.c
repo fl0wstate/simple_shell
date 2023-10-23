@@ -116,7 +116,7 @@ void unsetenv_builtin(m_args *mode_args)
 {
 	int status;
 
-	if (!(mode_args->tokens)[1])
+	if (!(mode_args->tokens)[1] || !_getenv(mode_args->tokens[1]))
 		return;
 	mode_args->free = 1;
 	status = _setenv((mode_args->tokens)[1], 0, 1);

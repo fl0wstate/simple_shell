@@ -12,7 +12,8 @@ int set_logicals(m_args *mode_args)
 
 	for (i = 0, j = 0; mode_args->line && (mode_args->line)[i]; i++)
 	{
-		if (mode_args->line[i] == '#')
+		if (mode_args->line[0] == '#' ||
+				(mode_args->line[i] == '#' && mode_args->line[i - 1] == 0x20))
 			mode_args->line[i] = 0;
 		if ((mode_args->line)[i] == SEPARATOR)
 		{

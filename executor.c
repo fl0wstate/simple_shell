@@ -41,6 +41,11 @@ void run(int mode_stat, int idx, m_args *mode_args)
 {
 	mode_args->tokens = mode_args->cmd_toks;
 	mode_args->tokens = tokenize_line(mode_args->cmd_toks[idx], "\t\x20");
+	if (!mode_args->tokens[0])
+	{
+		free_buf(&mode_args->tokens, 0, 1);
+		return;
+	}
 	mode_args->path = _which(mode_args->tokens[0], *mode_args->list_path);
 
 	mode(mode_stat)(mode_args);

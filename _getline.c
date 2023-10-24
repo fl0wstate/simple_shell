@@ -10,19 +10,17 @@
  */
 ssize_t _getline(char **line, size_t *len, FILE *stream)
 {
-	size_t init = !*line || !*len ? BUFFER : *len, i = 0, old;
-	ssize_t bytes;
+	size_t old, i = 0, init = !*line || !*len ? BUFFER : *len;
+	ssize_t bytes = 0;
 	static int count;
 
 	/*TODO: handle errors with allocation */
 	*len = !*line || !*len ? init : *len;
 	if (!*line || *len == 0)
 		*line = malloc(init);
-	/*while ((bytes = read(stream->_fileno, &((*line)[i++]), 1)) > REOF)*/
-	while ((bytes = read(stream->_fileno, *line, init)) > REOF)
+	while ((bytes = read(stream->_fileno, *line + i, BUFFER)) > REOF)
 	{
 		i += bytes;
-		printf("i = %ld, bytes = %lu, init = %ld\n", i, bytes, init);
 		if (i >= init)
 		{
 			if (++count < 2)
@@ -33,25 +31,20 @@ ssize_t _getline(char **line, size_t *len, FILE *stream)
 			else
 			{
 				old = init;
-				init += bytes;
+				init *= 2;
 			}
 			*len = init;
-			printf("Reallocate by %ld\n", init);
 			*line = _realloc(*line, old, init);
 		}
-		if ((*line)[bytes - 1] == '\n')
-		{
-			printf("[%ld] ------------> new line character\n", i - 1);
+		if ((*line)[i - 1] == '\n')
 			break;
-		}
 	}
 	if (bytes == REOF)
 	{
-		printf("EOF i = %ld, line = %s\n", i, *line);
-		/*(*line)[i - 1] = 0;*/
+		(*line)[i] = 0;
 		return (EOF);
 	}
-	(*line)[bytes] = 0;
+	(*line)[i] = 0;
 
 	return (i);
 }

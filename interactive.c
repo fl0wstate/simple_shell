@@ -12,7 +12,7 @@ void interactive(m_args *mode_args)
 
 	if (!builtin_handler(mode_args))
 		return;
-	if (!mode_args->path && !alias)
+	if (!mode_args->path && !alias && !is_replacement)
 	{
 		_dprintf(STDERR_FILENO, "%s: %u: %s: not found\n",
 				*mode_args->av, *mode_args->cmd_count, *mode_args->tokens);
@@ -31,7 +31,9 @@ void interactive(m_args *mode_args)
 		{
 			if (is_replacement)
 				expansion_handler(mode_args);
-			execve(!alias ? mode_args->path : _which(alias, *mode_args->list_path),
+			execve(!alias ? (!is_replacement ? mode_args->path
+					: _which(mode_args->args[0], *mode_args->list_path))
+					: _which(alias, *mode_args->list_path),
 					!is_replacement ? mode_args->tokens : mode_args->args, environ);
 			perror("execve");
 			free_safe(mode_args);

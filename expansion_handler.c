@@ -8,13 +8,13 @@
  */
 char **expansion_handler(m_args *mode_args)
 {
-	int i, j = 0;
-	char *str;
+	int i = 0, j = 0;
+	char *str = 0;
 
-	mode_args->args[0] = mode_args->tokens[0];
-	for (i = 1; mode_args->tokens[i]; i++)
+	for (i = 0; mode_args->tokens[i]; i++)
 	{
 		str = mode_args->tokens[i];
+		mode_args->args[i] = str;
 
 		/* escape 1st back-slash */
 		if (str[0] == '\\')
@@ -24,21 +24,25 @@ char **expansion_handler(m_args *mode_args)
 			mode_args->args[i] = str;
 			continue;
 		}
-		switch (str[1])
+		if (str[0] == '$')
 		{
-			case '$':
-				mode_args->args[i] = utoa(mode_args->ppid);
-				break;
-			case '?':
-				mode_args->args[i] = utoa(mode_args->_errno);
-				break;
-			default:
-				mode_args->args[i] = str;
-				if (str[0] == '$')
-					mode_args->args[i] = _getenv(str + 1);
-				/* Replace previous NULL values */
-				if (str[0] != '$' && !mode_args->args[++j])
-					mode_args->args[j] = str;
+			switch (str[1])
+			{
+				case '$':
+					mode_args->args[i] = utoa(mode_args->ppid);
+					break;
+				case '?':
+					mode_args->args[i] = utoa(mode_args->_errno);
+					break;
+				default:
+					/* grab it from environ */
+					mode_args->args[i] = str;
+					if (str[0] == '$')
+						mode_args->args[i] = _getenv(str + 1);
+					/* Replace previous NULL values */
+					if (str[0] != '$' && !mode_args->args[++j])
+						mode_args->args[j] = str;
+			}
 		}
 	}
 	mode_args->args[i] = 0;
@@ -54,11 +58,10 @@ char **expansion_handler(m_args *mode_args)
  */
 int _is_replacement(m_args *mode_args)
 {
-	int i = 1,
-	is_replaced = !_strcmp(mode_args->tokens[0], "echo") && mode_args->tokens[1];
+	int i;
 	char *is_expanded = 0;
 
-	for (; is_replaced && mode_args->tokens[i]; i++)
+	for (i = 0; mode_args->tokens[i]; i++)
 	{
 		is_expanded = _strpbrk(mode_args->tokens[i], "$");
 
@@ -66,5 +69,5 @@ int _is_replacement(m_args *mode_args)
 			return (1);
 	}
 
-	return (is_replaced && is_expanded);
+	return (0);
 }

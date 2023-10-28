@@ -11,7 +11,7 @@ void executor(int mode_stat, m_args *mode_args)
 
 	for (i = 0; mode_args->cmd_toks && mode_args->cmd_toks[i]; i++)
 	{
-		if (!i || !mode_args->logical_count)
+		if (!i)
 			run(mode_stat, i, mode_args);
 		else if (mode_args->logicals[i - 1])
 			switch (mode_args->logicals[i - 1])

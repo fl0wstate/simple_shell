@@ -37,10 +37,13 @@ A shell is a user interface for accessing an operating system's services. It can
     ```bash
     gcc -Wall -Werror -Wextra -pedantic -Wunused -std=gnu89 *.c main.h -o Sshell
     ```
+
 # Running the prorgram 🚀
 - After compilation do this
     ```bash
     ./Sshell
     ```
 - Here are some of the Demo of what you can do.
+  Demo 1
+  ![ezgif com-optimize](https://github.com/Mk-0-wan/simple_shell/assets/114664618/116cbd87-ba13-49fc-b4de-794d3db3c69c)
 <!--TODO-->

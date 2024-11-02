@@ -15,7 +15,7 @@ A shell is a user interface for accessing an operating system's services. It can
 1. **_Command Interpretation_**: The shell interprets user commands and translates them into a format that the operating system can understand and execute.
 
 2. **_Scripting_**: Shells often support scripting languages, allowing users to write scripts (sequences of commands) to automate tasks.
-
+..
 3. **_File Manipulation_**: Users can navigate the file system, create, delete, and manipulate files and directories through shell commands.
 
 4. **_Environment Customization_**: Users can customize their shell environment, setting variables, configuring aliases, and defining functions.

@@ -12,7 +12,7 @@ int _atoi(char *s)
 	while (*s)
 	{
 		if (*s == '-')
-			sign *= 1;
+			sign *= -1;
 		if (_isdigit(*s))
 			num = (num * 10) + (*s - 48);
 		s++;
